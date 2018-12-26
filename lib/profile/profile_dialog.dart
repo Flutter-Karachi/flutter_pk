@@ -58,35 +58,69 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
   }
 
   Widget _buildBody() {
-    return Column(
-      children: <Widget>[
-        Container(
-          height: 70.0,
-          width: 70.0,
-          decoration: new BoxDecoration(
-            shape: BoxShape.circle,
-            image: new DecorationImage(
-              fit: BoxFit.fill,
-              image: NetworkImage(userCache.user.photoUrl),
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Container(
+                height: 70.0,
+                width: 70.0,
+                decoration: new BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: new DecorationImage(
+                    fit: BoxFit.fill,
+                    image: NetworkImage(userCache.user.photoUrl),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                  userCache.user.displayName,
+                  style: Theme.of(context)
+                      .textTheme
+                      .title
+                      .copyWith(color: Colors.grey),
+                ),
+              ),
+              Text(
+                userCache.user.email,
+                style: Theme.of(context)
+                    .textTheme
+                    .subhead
+                    .copyWith(color: Colors.black38),
+              ),
+            ],
+          ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  child: Image(
+                    image: AssetImage('assets/loader.png'),
+                  ),
+                  height: 70.0,
+                  width: 70.0,
+                ),
+                Center(
+                  child: Text(
+                    'More features coming soon!',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context)
+                        .textTheme
+                        .title
+                        .copyWith(color: Colors.black38),
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Text(
-            userCache.user.displayName,
-            style:
-                Theme.of(context).textTheme.title.copyWith(color: Colors.grey),
-          ),
-        ),
-        Text(
-          userCache.user.email,
-          style: Theme.of(context)
-              .textTheme
-              .subhead
-              .copyWith(color: Colors.black38),
-        )
-      ],
+          Text('Built with Flutter & Material'),
+        ],
+      ),
     );
   }
 }
