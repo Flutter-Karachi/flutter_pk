@@ -18,6 +18,7 @@ dependencies:
   flutter_swiper: ^1.1.4
   firebase_auth: ^0.6.6
   cloud_firestore: ^0.8.2
+  sprung: ^1.1.0+11
   progress_indicators: ^0.1.2
   google_sign_in: ^3.2.4
 
