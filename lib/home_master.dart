@@ -26,7 +26,7 @@ class HomePageMasterState extends State<HomePageMaster> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => showErrorDialog('Whoops!',
-            'Registrations aren\'nt opened yet!', context),
+            'Registrations aren\'t opened yet!', context),
         icon: Icon(Icons.group_work),
         label: Text('Register'),
       ),
