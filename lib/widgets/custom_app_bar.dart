@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_pk/global.dart';
+import 'package:flutter_pk/profile/profile_dialog.dart';
 
 class CustomAppBar extends StatefulWidget {
   final String title;
@@ -12,7 +12,6 @@ class CustomAppBar extends StatefulWidget {
 }
 
 class CustomAppBarState extends State<CustomAppBar> {
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -25,11 +24,11 @@ class CustomAppBarState extends State<CustomAppBar> {
           children: <Widget>[
             GestureDetector(
               onTap: () async {
-                await googleSignIn.signOut();
-                await auth.signOut();
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  Routes.main,
-                  ModalRoute.withName(Routes.home_master),
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => FullScreenProfileDialog(),
+                    fullscreenDialog: true,
+                  ),
                 );
               },
               child: Padding(
