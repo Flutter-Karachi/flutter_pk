@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_pk/caches/user.dart';
+import 'package:flutter_pk/contribution/contribution_dialog.dart';
 import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/home_master.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_pk/widgets/full_screen_loader.dart';
+import 'package:flutter_pk/widgets/sprung_box.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sprung/sprung.dart';
@@ -170,7 +174,26 @@ class _MyHomePageState extends State<MyHomePage> {
         idToken: googleAuth.idToken,
       );
 
-      await userCache.getCurrentUser();
+      CollectionReference reference = Firestore.instance.collection('users');
+
+      User _user = User(
+          name: user.displayName,
+          mobileNumber: user.phoneNumber,
+          id: user.uid,
+          photoUrl: user.photoUrl,
+          email: user.email);
+
+      reference.document(user.uid).setData(_user.toJson());
+
+      await userCache.getCurrentUser(user.uid);
+
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => FullScreenContributionDialog(),
+          fullscreenDialog: true,
+        ),
+      );
+
       Navigator.of(context).pushNamedAndRemoveUntil(
         Routes.home_master,
         ModalRoute.withName(Routes.main),
@@ -180,76 +203,5 @@ class _MyHomePageState extends State<MyHomePage> {
     } finally {
       setState(() => _isLoading = false);
     }
-  }
-}
-
-typedef void BoolCallback(bool val);
-
-class SprungBox extends StatefulWidget {
-  final Damped damped;
-  final Duration duration;
-  final BoolCallback callback;
-
-  SprungBox({
-    this.damped = Damped.critically,
-    this.callback,
-    duration,
-  }) : this.duration = duration ?? Duration(milliseconds: 3500);
-
-  @override
-  _SprungBoxState createState() => _SprungBoxState();
-}
-
-class _SprungBoxState extends State<SprungBox>
-    with SingleTickerProviderStateMixin {
-  bool _isOffset = false;
-  bool showFlag = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _toggleOffset();
-  }
-
-  void _toggleOffset() async {
-    await Future.delayed(new Duration(milliseconds: 500));
-    setState(() {
-      this._isOffset = !this._isOffset;
-    });
-    await Future.delayed(new Duration(milliseconds: 1500));
-    widget.callback(true);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final height = constraints.maxWidth * 2;
-        final left = !this._isOffset ? height + 100.0 : 40.0;
-
-        final width = MediaQuery.of(context).size.width * 2;
-
-        return Padding(
-          padding: const EdgeInsets.only(right: 48.0),
-          child: AnimatedContainer(
-            duration: this.widget.duration,
-            curve: Sprung(damped: this.widget.damped),
-            margin: EdgeInsets.only(
-              left: left,
-            ),
-            height: 250.0,
-            width: width,
-            color: Colors.transparent,
-            child: SizedBox(
-              height: 250.0,
-              width: 250.0,
-              child: Image(
-                image: AssetImage('assets/flutterKarachi.png'),
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 }

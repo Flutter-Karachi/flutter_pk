@@ -31,7 +31,8 @@ class HomePageMasterState extends State<HomePageMaster> {
         label: Text('Register'),
       ),
       body: widgets.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar:
+      BottomNavigationBar(
         onTap: (value) {
           if (value != 1)
             setState(() {

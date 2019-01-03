@@ -28,31 +28,33 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
   Padding _buildCustomAppBarSpace(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          GestureDetector(
-            child: Icon(Icons.clear),
-            onTap: () => Navigator.of(context).pop(),
-          ),
-          FlatButton(
-            child: Text(
-              'SIGN OUT',
-              style: Theme.of(context).textTheme.subhead.copyWith(
-                    color: Theme.of(context).primaryColor,
-                  ),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            GestureDetector(
+              child: Icon(Icons.clear),
+              onTap: () => Navigator.of(context).pop(),
             ),
-            onPressed: () async {
-              await googleSignIn.signOut();
-              await auth.signOut();
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                Routes.main,
-                ModalRoute.withName(Routes.home_master),
-              );
-            },
-            textColor: Theme.of(context).primaryColor,
-          )
-        ],
+            GestureDetector(
+              child: Text(
+                'SIGN OUT',
+                style: Theme.of(context).textTheme.subhead.copyWith(
+                      color: Theme.of(context).primaryColor,
+                    ),
+              ),
+              onTap: () async {
+                await googleSignIn.signOut();
+                await auth.signOut();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  Routes.main,
+                  ModalRoute.withName(Routes.home_master),
+                );
+              },
+            )
+          ],
+        ),
       ),
     );
   }
@@ -78,7 +80,7 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  userCache.user.displayName,
+                  userCache.user.name,
                   style: Theme.of(context)
                       .textTheme
                       .title
