@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pk/caches/user.dart';
 import 'package:flutter_pk/contribution/contribution_dialog.dart';
+import 'package:flutter_pk/dialogs/custom_error_dialog.dart';
 import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/home_master.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_pk/widgets/full_screen_loader.dart';
 import 'package:flutter_pk/widgets/sprung_box.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprung/sprung.dart';
 
 void main() => runApp(MyApp());
@@ -44,17 +46,29 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool _isLoading = false;
   bool _showSwipeText = false;
+  bool _isFetchingSharedPreferences = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getSharedPreferences();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Scaffold(
-          body: _buildBody(context),
-        ),
-        _isLoading ? FullScreenLoader() : Container()
-      ],
-    );
+    return _isFetchingSharedPreferences
+        ? Scaffold(
+            body: Center(),
+          )
+        : Stack(
+            children: <Widget>[
+              Scaffold(
+                body: _buildBody(context),
+              ),
+              _isLoading ? FullScreenLoader() : Container()
+            ],
+          );
   }
 
   SafeArea _buildBody(BuildContext context) {
@@ -107,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 32.0),
+                padding: const EdgeInsets.only(top: 32.0, bottom: 32.0),
                 child: RaisedButton(
                   onPressed: _handleSignIn,
                   color: Theme.of(context).primaryColor,
@@ -174,25 +188,32 @@ class _MyHomePageState extends State<MyHomePage> {
         idToken: googleAuth.idToken,
       );
 
-      CollectionReference reference = Firestore.instance.collection('users');
+      CollectionReference reference =
+          Firestore.instance.collection(FireStoreKeys.userCollection);
 
-      User _user = User(
-          name: user.displayName,
-          mobileNumber: user.phoneNumber,
-          id: user.uid,
-          photoUrl: user.photoUrl,
-          email: user.email);
+      if(reference.document(user.uid).get() == null) {
+        User _user = User(
+            name: user.displayName,
+            mobileNumber: user.phoneNumber,
+            id: user.uid,
+            photoUrl: user.photoUrl,
+            email: user.email);
 
-      reference.document(user.uid).setData(_user.toJson());
+        reference.document(user.uid).setData(_user.toJson());
+      }
+      final SharedPreferences prefs = await sharedPreferences;
+      prefs.setString(SharedPreferencesKeys.firebaseUserId, user.uid);
 
       await userCache.getCurrentUser(user.uid);
 
-      await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => FullScreenContributionDialog(),
-          fullscreenDialog: true,
-        ),
-      );
+      if(!userCache.user.isContributor) {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => FullScreenContributionDialog(),
+            fullscreenDialog: true,
+          ),
+        );
+      }
 
       Navigator.of(context).pushNamedAndRemoveUntil(
         Routes.home_master,
@@ -202,6 +223,26 @@ class _MyHomePageState extends State<MyHomePage> {
       print(ex);
     } finally {
       setState(() => _isLoading = false);
+    }
+  }
+
+  void _getSharedPreferences() async {
+    setState(() => _isFetchingSharedPreferences = true);
+    try {
+      final SharedPreferences prefs = await sharedPreferences;
+      var userId = prefs.get(SharedPreferencesKeys.firebaseUserId);
+      if (userId != null) {
+        await userCache.getCurrentUser(userId);
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          Routes.home_master,
+          ModalRoute.withName(Routes.main),
+        );
+      }
+    } catch (ex) {
+      print(ex);
+      showErrorDialog('Oops!', 'An error has occured', context);
+    } finally {
+      setState(() => _isFetchingSharedPreferences = false);
     }
   }
 }

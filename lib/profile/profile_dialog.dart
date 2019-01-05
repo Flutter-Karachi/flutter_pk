@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_pk/contribution/contribution_dialog.dart';
 import 'package:flutter_pk/global.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FullScreenProfileDialog extends StatefulWidget {
   @override
@@ -45,6 +47,8 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
                     ),
               ),
               onTap: () async {
+                final SharedPreferences prefs = await sharedPreferences;
+                prefs.clear();
                 await googleSignIn.signOut();
                 await auth.signOut();
                 Navigator.of(context).pushNamedAndRemoveUntil(
@@ -120,6 +124,22 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
               ],
             ),
           ),
+          !userCache.user.isContributor
+              ? ListTile(
+                  title: Center(child: Text('Want to contribute?')),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => FullScreenContributionDialog(),
+                        fullscreenDialog: true,
+                      ),
+                    );
+                    setState(() async {
+                      await userCache.getCurrentUser(userCache.user.id);
+                    });
+                  },
+                )
+              : Container(),
           Text('Built with Flutter & Material'),
         ],
       ),

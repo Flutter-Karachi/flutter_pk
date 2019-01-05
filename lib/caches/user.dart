@@ -5,8 +5,8 @@ class UserCache {
 
   User get user => _user;
 
-  Future<User> getCurrentUser(String id) async {
-    if (_user != null) {
+  Future<User> getCurrentUser(String id, {bool useCached = true}) async {
+    if (_user != null && useCached) {
       return _user;
     }
     _user = User.fromSnapshot(
@@ -22,7 +22,10 @@ class User {
   final String photoUrl;
   final String mobileNumber;
   final bool isRegistered;
+  final bool isContributor;
   final DocumentReference reference;
+
+  Contribution contribution;
 
   User({
     this.name,
@@ -31,6 +34,7 @@ class User {
     this.reference,
     this.photoUrl,
     this.isRegistered = false,
+    this.isContributor = false,
     this.mobileNumber,
   });
 
@@ -40,7 +44,11 @@ class User {
         email = map['email'],
         photoUrl = map['photoUrl'],
         isRegistered = map['isRegistered'],
-        mobileNumber = map['mobileNumber'];
+        isContributor = map['isContributor'],
+        mobileNumber = map['mobileNumber'] {
+    print(map['contribution']);
+    if (isContributor) contribution = Contribution.fromMap(map['contribution']);
+  }
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -49,8 +57,36 @@ class User {
         "photoUrl": photoUrl,
         "isRegistered": isRegistered,
         "mobileNumber": mobileNumber,
+        "isContributor": isContributor
       };
 
   User.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
+}
+
+class Contribution {
+  final bool isVolunteer;
+  final bool isLogisticsAdministrator;
+  final bool isSpeaker;
+  final bool isSocialMediaMarketingPerson;
+
+  Contribution({
+    this.isSocialMediaMarketingPerson,
+    this.isLogisticsAdministrator,
+    this.isSpeaker,
+    this.isVolunteer,
+  });
+
+  Contribution.fromMap(Map<dynamic, dynamic> map)
+      : isSpeaker = map['speaker'],
+        isSocialMediaMarketingPerson = map['socialMediaMarketing'],
+        isLogisticsAdministrator = map['administrationAndLogistics'],
+        isVolunteer = map['volunteer'];
+
+  Map<String, dynamic> toJson() => {
+        "socialMediaMarketing": isSocialMediaMarketingPerson,
+        "speaker": isSpeaker,
+        "administrationAndLogistics": isLogisticsAdministrator,
+        "volunteer": isVolunteer
+      };
 }

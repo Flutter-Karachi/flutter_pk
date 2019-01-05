@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pk/global.dart';
+import 'package:flutter_pk/helpers/formatters.dart';
 import 'package:flutter_pk/widgets/capsule_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_pk/widgets/custom_app_bar.dart';
 import 'package:progress_indicators/progress_indicators.dart';
+import 'package:rounded_modal/rounded_modal.dart';
 
 class SchedulePage extends StatefulWidget {
   @override
@@ -15,36 +17,15 @@ class SchedulePage extends StatefulWidget {
 
 class SchedulePageState extends State<SchedulePage>
     with SingleTickerProviderStateMixin {
-  final String dateParameter = 'dates';
-  final String sessionsParameter = 'sessions';
-
   final Map<String, Color> _stringToColor = {
     'red': Colors.red,
     'green': Colors.green,
     'amber': Colors.amber,
     'blue': Colors.blue,
     'white': Colors.white,
-    'black': Colors.black
+    'black': Colors.black,
+    'blueGrey' : Colors.blueGrey
   };
-
-  FirebaseUser user;
-  bool _isLoading = false;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _populateUser();
-  }
-
-  void _populateUser() async {
-    setState(() => _isLoading = true);
-    var firebaseUser = await auth.currentUser();
-    setState(() {
-      user = firebaseUser;
-      _isLoading = false;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,13 +46,15 @@ class SchedulePageState extends State<SchedulePage>
 
   Widget _buildBody() {
     return Expanded(
-      child: _streamBuilder(sessionsParameter),
+      child: _streamBuilder(FireStoreKeys.sessionsCollection),
     );
   }
 
   StreamBuilder<QuerySnapshot> _streamBuilder(String parameter) {
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection(dateParameter).snapshots(),
+      stream: Firestore.instance
+          .collection(FireStoreKeys.datesCollection)
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return Center(
@@ -92,7 +75,10 @@ class SchedulePageState extends State<SchedulePage>
   Widget _getCollection(
       BuildContext context, DocumentSnapshot snapshot, String parameter) {
     return StreamBuilder<QuerySnapshot>(
-        stream: snapshot.reference.collection(parameter).snapshots(),
+        stream: snapshot.reference
+            .collection(parameter)
+            .orderBy('startDateTime')
+            .snapshots(),
         builder: (context, snapshot) {
           return _buildList(context, snapshot.data?.documents);
         });
@@ -105,8 +91,6 @@ class SchedulePageState extends State<SchedulePage>
       padding: const EdgeInsets.only(top: 20.0),
       children: snapshot
           .map((data) => _buildListItem(context, data))
-          .toList()
-          .reversed
           .toList(),
     );
   }
@@ -165,11 +149,54 @@ class SchedulePageState extends State<SchedulePage>
                     style: TextStyle(color: _stringToColor[session?.textColor]),
                   ),
                   subtitle: Text(
-                    session?.startDateTime?.toString(),
+                    '${formatDate(
+                      session?.startDateTime,
+                      DateFormats.shortUiDateTimeFormat,
+                    )} - ${formatDate(
+                      session?.endDateTime,
+                      DateFormats.shortUiTimeFormat,
+                    )}',
                     style: TextStyle(
                       color: _stringToColor[session?.textColor],
                     ),
                   ),
+                  onTap: () {
+                    showRoundedModalBottomSheet(
+                        context: context,
+                        autoResize: true,
+                        radius: 20.0,
+                        color: Theme.of(context).canvasColor,
+                        builder: (context) => Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  ListTile(
+                                    title: Text(
+                                      session.title,
+                                      overflow: TextOverflow.clip,
+                                      softWrap: true,
+                                    ),
+                                    trailing: RaisedButton(
+                                      onPressed: () {},
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                      ),
+                                      color: _stringToColor[session.color],
+                                      textColor:
+                                          _stringToColor[session.textColor],
+                                      child: Text('Rate this session'),
+                                    ),
+                                  ),
+                                  ListTile(
+                                    subtitle: Center(
+                                        child: Text(session.description)),
+                                  ),
+                                ],
+                              ),
+                            ));
+                  },
                 ),
               ),
             ),
@@ -178,65 +205,8 @@ class SchedulePageState extends State<SchedulePage>
         Padding(
           padding: const EdgeInsets.only(top: 16.0),
         )
-//          trailing: CapsuleText(
-//            color: _getTypeColor[session?.type],
-//            title: session?.type,
-//            textColor: _getTextColor[_getTypeColor[session?.type]],
-//          ),
-//        Divider()
       ],
     );
-
-//    return Column(
-//      children: <Widget>[
-//        ListTile(
-//          onTap: () {},
-//          leading: Column(
-//            children: <Widget>[
-//              Text(
-//                '${hour < 10 ? '0' + hour.toString() : hour.toString()}:${minute < 10 ? '0' + minute.toString() : minute.toString()}',
-//                style: TextStyle(
-//                  color: Theme.of(context).primaryColor,
-//                ),
-//              ),
-//              Text(
-//                'HRS',
-//                style: TextStyle(
-//                  color: Theme.of(context).primaryColor,
-//                ),
-//              )
-//            ],
-//          ),
-//          title: Text(
-//            session.title,
-//          ),
-//          subtitle: Text(
-//            session?.startDateTime?.toString(),
-//          ),
-////          trailing: CapsuleText(
-////            color: _getTypeColor[session?.type],
-////            title: session?.type,
-////            textColor: _getTextColor[_getTypeColor[session?.type]],
-////          ),
-//        ),
-//        Divider()
-//      ],
-//    );
-//        Padding(
-//            padding: const EdgeInsets.only(left: 16.0),
-//            child: Container(
-//              decoration: BoxDecoration(
-//                  color: _getTypeColor[session?.type],
-//                  borderRadius: BorderRadius.only(
-//                      topLeft: Radius.circular(10.0),
-//                      bottomLeft: Radius.circular(10.0))),
-//              child: ListTile(
-//                leading: Icon(Icons.timer),
-//                title: Text(session?.title),
-//                subtitle: Text(session?.startDateTime.toString()),
-//              ),
-//            ),
-//          );
   }
 }
 
@@ -246,6 +216,7 @@ class Session {
   final DateTime endDateTime;
   final String color;
   final String textColor;
+  final String description;
   final DocumentReference reference;
 
   Session({
@@ -254,6 +225,7 @@ class Session {
     this.startDateTime,
     this.color,
     this.textColor,
+    this.description,
     this.reference,
   });
 
@@ -262,7 +234,8 @@ class Session {
         endDateTime = map['endDateTime'],
         startDateTime = map['startDateTime'],
         color = map['color'],
-        textColor = map['textColor'];
+        textColor = map['textColor'],
+        description = map['description'];
 
   Session.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);
