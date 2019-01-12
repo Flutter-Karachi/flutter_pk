@@ -19,7 +19,11 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.black,
+      ),
+    );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
@@ -179,6 +183,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future _handleSignIn() async {
+    final SharedPreferences prefs = await sharedPreferences;
+    userCache.clear();
+    prefs.clear();
     setState(() => _isLoading = true);
     try {
       GoogleSignInAccount googleUser = await googleSignIn.signIn();
@@ -191,22 +198,26 @@ class _MyHomePageState extends State<MyHomePage> {
       CollectionReference reference =
           Firestore.instance.collection(FireStoreKeys.userCollection);
 
-      if(reference.document(user.uid).get() == null) {
-        User _user = User(
-            name: user.displayName,
-            mobileNumber: user.phoneNumber,
-            id: user.uid,
-            photoUrl: user.photoUrl,
-            email: user.email);
+      await reference.document(user.uid).get().then((snap) async {
+        if (!snap.exists) {
+          print('hello');
+          User _user = User(
+              name: user.displayName,
+              mobileNumber: user.phoneNumber,
+              id: user.uid,
+              photoUrl: user.photoUrl,
+              email: user.email);
 
-        reference.document(user.uid).setData(_user.toJson());
-      }
-      final SharedPreferences prefs = await sharedPreferences;
+          await reference
+              .document(user.uid)
+              .setData(_user.toJson(), merge: true);
+        }
+      });
       prefs.setString(SharedPreferencesKeys.firebaseUserId, user.uid);
 
       await userCache.getCurrentUser(user.uid);
 
-      if(!userCache.user.isContributor) {
+      if (!userCache.user.isContributor) {
         await Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => FullScreenContributionDialog(),

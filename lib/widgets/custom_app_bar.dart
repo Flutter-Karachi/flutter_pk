@@ -20,7 +20,7 @@ class CustomAppBarState extends State<CustomAppBar> {
     // TODO: implement initState
     super.initState();
     var date = Firestore.instance
-        .collection(FireStoreKeys.datesCollection)
+        .collection(FireStoreKeys.dateCollection)
         .snapshots()
         .first;
     date.then((onValue) {

@@ -13,6 +13,8 @@ class UserCache {
         await Firestore.instance.collection('users').document(id).get());
     return _user;
   }
+
+  void clear() => _user = null;
 }
 
 class User {

@@ -1,12 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/helpers/formatters.dart';
+import 'package:flutter_pk/schedule/model.dart';
+import 'package:flutter_pk/schedule/session_detail.dart';
 import 'package:flutter_pk/widgets/capsule_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_pk/widgets/custom_app_bar.dart';
 import 'package:progress_indicators/progress_indicators.dart';
-import 'package:rounded_modal/rounded_modal.dart';
 
 class SchedulePage extends StatefulWidget {
   @override
@@ -17,16 +19,6 @@ class SchedulePage extends StatefulWidget {
 
 class SchedulePageState extends State<SchedulePage>
     with SingleTickerProviderStateMixin {
-  final Map<String, Color> _stringToColor = {
-    'red': Colors.red,
-    'green': Colors.green,
-    'amber': Colors.amber,
-    'blue': Colors.blue,
-    'white': Colors.white,
-    'black': Colors.black,
-    'blueGrey' : Colors.blueGrey
-  };
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -46,14 +38,14 @@ class SchedulePageState extends State<SchedulePage>
 
   Widget _buildBody() {
     return Expanded(
-      child: _streamBuilder(FireStoreKeys.sessionsCollection),
+      child: _streamBuilder(FireStoreKeys.sessionCollection),
     );
   }
 
   StreamBuilder<QuerySnapshot> _streamBuilder(String parameter) {
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance
-          .collection(FireStoreKeys.datesCollection)
+          .collection(FireStoreKeys.dateCollection)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData)
@@ -89,9 +81,7 @@ class SchedulePageState extends State<SchedulePage>
     if (snapshot.length < 1) return Container();
     return ListView(
       padding: const EdgeInsets.only(top: 20.0),
-      children: snapshot
-          .map((data) => _buildListItem(context, data))
-          .toList(),
+      children: snapshot.map((data) => _buildListItem(context, data)).toList(),
     );
   }
 
@@ -137,7 +127,7 @@ class SchedulePageState extends State<SchedulePage>
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: _stringToColor[session?.color],
+                  color: ColorDictionary.stringToColor[session?.color],
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(10.0),
                     bottomLeft: Radius.circular(10.0),
@@ -146,7 +136,9 @@ class SchedulePageState extends State<SchedulePage>
                 child: ListTile(
                   title: Text(
                     session.title,
-                    style: TextStyle(color: _stringToColor[session?.textColor]),
+                    style: TextStyle(
+                        color:
+                            ColorDictionary.stringToColor[session?.textColor]),
                   ),
                   subtitle: Text(
                     '${formatDate(
@@ -157,45 +149,17 @@ class SchedulePageState extends State<SchedulePage>
                       DateFormats.shortUiTimeFormat,
                     )}',
                     style: TextStyle(
-                      color: _stringToColor[session?.textColor],
+                      color: ColorDictionary.stringToColor[session?.textColor],
                     ),
                   ),
-                  onTap: () {
-                    showRoundedModalBottomSheet(
-                        context: context,
-                        autoResize: true,
-                        radius: 20.0,
-                        color: Theme.of(context).canvasColor,
-                        builder: (context) => Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  ListTile(
-                                    title: Text(
-                                      session.title,
-                                      overflow: TextOverflow.clip,
-                                      softWrap: true,
-                                    ),
-                                    trailing: RaisedButton(
-                                      onPressed: () {},
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                      ),
-                                      color: _stringToColor[session.color],
-                                      textColor:
-                                          _stringToColor[session.textColor],
-                                      child: Text('Rate this session'),
-                                    ),
-                                  ),
-                                  ListTile(
-                                    subtitle: Center(
-                                        child: Text(session.description)),
-                                  ),
-                                ],
-                              ),
-                            ));
+                  onTap: () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => SessionDetailPage(
+                              session: session,
+                            ),
+                      ),
+                    );
                   },
                 ),
               ),
@@ -208,35 +172,4 @@ class SchedulePageState extends State<SchedulePage>
       ],
     );
   }
-}
-
-class Session {
-  final String title;
-  final DateTime startDateTime;
-  final DateTime endDateTime;
-  final String color;
-  final String textColor;
-  final String description;
-  final DocumentReference reference;
-
-  Session({
-    this.title,
-    this.endDateTime,
-    this.startDateTime,
-    this.color,
-    this.textColor,
-    this.description,
-    this.reference,
-  });
-
-  Session.fromMap(Map<String, dynamic> map, {this.reference})
-      : title = map['title'],
-        endDateTime = map['endDateTime'],
-        startDateTime = map['startDateTime'],
-        color = map['color'],
-        textColor = map['textColor'],
-        description = map['description'];
-
-  Session.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, reference: snapshot.reference);
 }
