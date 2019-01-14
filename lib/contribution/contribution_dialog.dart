@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pk/caches/user.dart';
 import 'package:flutter_pk/dialogs/custom_error_dialog.dart';
 import 'package:flutter_pk/global.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class FullScreenContributionDialog extends StatefulWidget {
   @override
@@ -172,7 +173,28 @@ class FullScreenContributionDialogState
       Navigator.of(context).pop();
     } catch (ex) {
       print(ex);
-      showErrorDialog('Oops!', 'An error occured', context);
+      Alert(
+        context: context,
+        type: AlertType.error,
+        title: "Oops!",
+        desc:
+        "An error has occurred",
+        buttons: [
+          DialogButton(
+            child: Text("Dismiss",
+                style: Theme.of(context)
+                    .textTheme
+                    .title
+                    .copyWith(
+                  color: Colors.white,
+                )),
+            color: Colors.red,
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      ).show();
     }
   }
 

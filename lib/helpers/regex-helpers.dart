@@ -1,3 +1,3 @@
 abstract class RegexHelpers {
-  static RegExp phoneNumberRegex = RegExp(r"^[0-9]*$");
+  static RegExp phoneNumberRegex = RegExp(r"^[+][0-9]*$");
 }

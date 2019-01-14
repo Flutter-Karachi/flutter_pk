@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_pk/caches/user.dart';
 import 'package:flutter_pk/contribution/contribution_dialog.dart';
 import 'package:flutter_pk/global.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FullScreenProfileDialog extends StatefulWidget {
@@ -12,6 +14,15 @@ class FullScreenProfileDialog extends StatefulWidget {
 }
 
 class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
+  User _user = new User();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _setUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,14 +58,38 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
                     ),
               ),
               onTap: () async {
-                final SharedPreferences prefs = await sharedPreferences;
-                prefs.clear();
-                await googleSignIn.signOut();
-                await auth.signOut();
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  Routes.main,
-                  ModalRoute.withName(Routes.home_master),
-                );
+                try {
+                  final SharedPreferences prefs = await sharedPreferences;
+                  prefs.clear();
+                  await googleSignIn.signOut();
+                  await auth.signOut();
+                  userCache.clear();
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    Routes.main,
+                    ModalRoute.withName(Routes.home_master),
+                  );
+                } catch (ex) {
+                  print(ex);
+                  Alert(
+                    context: context,
+                    type: AlertType.error,
+                    title: "Oops!",
+                    desc: "An error has occurred",
+                    buttons: [
+                      DialogButton(
+                        child: Text("Dismiss",
+                            style: Theme.of(context).textTheme.title.copyWith(
+                                  color: Colors.white,
+                                )),
+                        color: Colors.red,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                      )
+                    ],
+                  ).show();
+                }
               },
             )
           ],
@@ -77,14 +112,14 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
                   shape: BoxShape.circle,
                   image: new DecorationImage(
                     fit: BoxFit.fill,
-                    image: NetworkImage(userCache.user.photoUrl),
+                    image: NetworkImage(_user.photoUrl),
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  userCache.user.name,
+                  _user.name,
                   style: Theme.of(context)
                       .textTheme
                       .title
@@ -92,7 +127,7 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
                 ),
               ),
               Text(
-                userCache.user.email,
+                _user.email,
                 style: Theme.of(context)
                     .textTheme
                     .subhead
@@ -124,18 +159,22 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
               ],
             ),
           ),
-          !userCache.user.isContributor
+          !_user.isContributor
               ? ListTile(
                   title: Center(child: Text('Want to contribute?')),
-                  onTap: () {
-                    Navigator.of(context).push(
+                  onTap: () async {
+                    await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => FullScreenContributionDialog(),
                         fullscreenDialog: true,
                       ),
                     );
-                    setState(() async {
-                      await userCache.getCurrentUser(userCache.user.id);
+                    var user = await userCache.getCurrentUser(
+                      userCache.user.id,
+                      useCached: false,
+                    );
+                    setState(() {
+                      _user = user;
                     });
                   },
                 )
@@ -144,5 +183,12 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
         ],
       ),
     );
+  }
+
+  Future _setUser() async {
+    var user = await userCache.getCurrentUser(userCache.user.id);
+    setState(() {
+      _user = user;
+    });
   }
 }

@@ -1,5 +1,37 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+class Speaker {
+  final String id;
+  final String name;
+  final String photoUrl;
+  final String description;
+  final DocumentReference reference;
+
+  Speaker({
+    this.name,
+    this.id,
+    this.description,
+    this.reference,
+    this.photoUrl,
+  });
+
+  Speaker.fromMap(Map<String, dynamic> map, {this.reference})
+      : id = map['id'],
+        description = map['description'],
+        name = map['name'],
+        photoUrl = map['photoUrl'];
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "description": description,
+    "photoUrl": photoUrl,
+  };
+
+  Speaker.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data, reference: snapshot.reference);
+}
+
 class Session {
   final String title;
   final DateTime startDateTime;

@@ -11,6 +11,7 @@ import 'package:flutter_pk/widgets/full_screen_loader.dart';
 import 'package:flutter_pk/widgets/sprung_box.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprung/sprung.dart';
 
@@ -20,9 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle.dark.copyWith(
-        statusBarColor: Colors.black,
-      ),
+      SystemUiOverlayStyle.dark
     );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -101,9 +100,8 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          SizedBox(
-            height: 250.0,
-            width: 250.0,
+          Padding(
+            padding: const EdgeInsets.only(left: 64.0, right: 64.0),
             child: _isLoading
                 ? Container()
                 : Image(
@@ -131,6 +129,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   color: Theme.of(context).primaryColor,
                   textColor: Colors.white,
                   child: Text('Get started'),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)
+                  ),
                 ),
               )
             ],
@@ -200,7 +201,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
       await reference.document(user.uid).get().then((snap) async {
         if (!snap.exists) {
-          print('hello');
           User _user = User(
               name: user.displayName,
               mobileNumber: user.phoneNumber,
@@ -232,6 +232,28 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     } catch (ex) {
       print(ex);
+      Alert(
+        context: context,
+        type: AlertType.error,
+        title: "Oops!",
+        desc:
+        "An error has occurred",
+        buttons: [
+          DialogButton(
+            child: Text("Dismiss",
+                style: Theme.of(context)
+                    .textTheme
+                    .title
+                    .copyWith(
+                  color: Colors.white,
+                )),
+            color: Colors.red,
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      ).show();
     } finally {
       setState(() => _isLoading = false);
     }
@@ -251,7 +273,28 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     } catch (ex) {
       print(ex);
-      showErrorDialog('Oops!', 'An error has occured', context);
+      Alert(
+        context: context,
+        type: AlertType.error,
+        title: "Oops!",
+        desc:
+        "An error has occurred",
+        buttons: [
+          DialogButton(
+            child: Text("Dismiss",
+                style: Theme.of(context)
+                    .textTheme
+                    .title
+                    .copyWith(
+                  color: Colors.white,
+                )),
+            color: Colors.red,
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      ).show();
     } finally {
       setState(() => _isFetchingSharedPreferences = false);
     }

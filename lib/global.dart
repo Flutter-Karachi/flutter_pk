@@ -10,7 +10,12 @@ abstract class Routes {
 }
 
 abstract class GlobalConstants {
-  static const int phoneNumberMaxLength = 10;
+  static const int phoneNumberMaxLength = 13;
+  static const int entryMaxLength = 50;
+  static const String addNumberDisplayText =
+      'Add your phone number in order to receive event updates.';
+  static const String editNumberDisplayText =
+      'Looks like you have a number registered against your account. You can use the same number to receive event confirmations or you can update it.';
 }
 
 abstract class SharedPreferencesKeys {

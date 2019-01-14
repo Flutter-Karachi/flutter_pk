@@ -24,6 +24,7 @@ dependencies:
   progress_indicators: ^0.1.2
   google_sign_in: ^3.2.4
   cached_network_image: ^0.5.1
+  rflutter_alert: ^1.0.2
   shared_preferences: ^0.4.3
 
   # The following adds the Cupertino Icons font to your application.

@@ -38,7 +38,7 @@ class SessionDetailPage extends StatelessWidget {
           color: ColorDictionary.stringToColor[session.textColor],
         ),
         label: Text(
-          'Rate',
+          'Feedback',
           style: TextStyle(
               color: ColorDictionary.stringToColor[session.textColor]),
         ),
@@ -173,24 +173,6 @@ class SessionDetailPage extends StatelessWidget {
                 ],
               ),
             ),
-//            ListTile(
-//                title: FutureBuilder<String>(
-//              future: _getData(),
-//              builder: (context, snapshot) {
-//                if (snapshot.hasData) {
-//                  return Text(
-//                    snapshot.data.toString(),
-//                    textAlign: TextAlign.center,
-//                    overflow: TextOverflow.ellipsis,
-//                    style: TextStyle(fontWeight: FontWeight.bold),
-//                  );
-//                } else if (snapshot.hasError) {
-//                  return Text("${snapshot.error}");
-//                }
-//
-//                return new CircularProgressIndicator();
-//              },
-//            )),
           ],
         ),
       ),
@@ -204,36 +186,4 @@ class SessionDetailPage extends StatelessWidget {
         Speaker.fromSnapshot(await reference.document(session.speakerId).get());
     return speaker;
   }
-}
-
-class Speaker {
-  final String id;
-  final String name;
-  final String photoUrl;
-  final String description;
-  final DocumentReference reference;
-
-  Speaker({
-    this.name,
-    this.id,
-    this.description,
-    this.reference,
-    this.photoUrl,
-  });
-
-  Speaker.fromMap(Map<String, dynamic> map, {this.reference})
-      : id = map['id'],
-        description = map['description'],
-        name = map['name'],
-        photoUrl = map['photoUrl'];
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "description": description,
-        "photoUrl": photoUrl,
-      };
-
-  Speaker.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, reference: snapshot.reference);
 }
