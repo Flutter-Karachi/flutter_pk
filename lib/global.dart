@@ -31,7 +31,7 @@ abstract class FireStoreKeys {
 
 abstract class ColorDictionary {
   static const Map<String, Color> stringToColor = {
-    'red': Colors.red,
+    'indigo': Colors.indigo,
     'green': Colors.green,
     'amber': Colors.amber,
     'blue': Colors.blue,
