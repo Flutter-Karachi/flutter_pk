@@ -37,55 +37,59 @@ class HomePageMasterState extends State<HomePageMaster> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _user.isRegistered
-            ? Alert(
-                context: context,
-                type: AlertType.info,
-                title: "Information!",
-                desc:
-                    "You will be able to scan a QR on the event day!\nCheers!",
-                buttons: [
-                  DialogButton(
-                    child: Text("Cool!",
-                        style: Theme.of(context).textTheme.title.copyWith(
-                              color: Colors.white,
-                            )),
-                    color: Colors.green,
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-              ).show()
-            : _navigateToRegistration(context),
-        icon: Icon(
-            _user.isRegistered ? Icons.center_focus_weak : Icons.group_work),
-        label: Text(_user.isRegistered ? 'Scan QR' : 'Register'),
-      ),
-      body: widgets.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (value) {
-          if (value != 1)
-            setState(() {
-              _selectedIndex = value;
-            });
-        },
-        currentIndex: _selectedIndex,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.date_range), title: Text('Schedule')),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.date_range,
-                color: Colors.transparent,
-              ),
-              title: Text(' ')),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.rss_feed), title: Text('Feed')),
-        ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark,
+      sized: false,
+      child: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => _user.isRegistered
+              ? Alert(
+                  context: context,
+                  type: AlertType.info,
+                  title: "Information!",
+                  desc:
+                      "You will be able to scan a QR on the event day!\nCheers!",
+                  buttons: [
+                    DialogButton(
+                      child: Text("Cool!",
+                          style: Theme.of(context).textTheme.title.copyWith(
+                                color: Colors.white,
+                              )),
+                      color: Colors.green,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
+                ).show()
+              : _navigateToRegistration(context),
+          icon: Icon(
+              _user.isRegistered ? Icons.center_focus_weak : Icons.group_work),
+          label: Text(_user.isRegistered ? 'Scan QR' : 'Register'),
+        ),
+        body: widgets.elementAt(_selectedIndex),
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: (value) {
+            if (value != 1)
+              setState(() {
+                _selectedIndex = value;
+              });
+          },
+          currentIndex: _selectedIndex,
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+                icon: Icon(Icons.date_range), title: Text('Schedule')),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.date_range,
+                  color: Colors.transparent,
+                ),
+                title: Text(' ')),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.rss_feed), title: Text('Feed')),
+          ],
+        ),
       ),
     );
   }

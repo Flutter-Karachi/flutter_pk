@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle.dark
+      SystemUiOverlayStyle.dark,
     );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -60,18 +60,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return _isFetchingSharedPreferences
-        ? Scaffold(
-            body: Center(),
-          )
-        : Stack(
-            children: <Widget>[
-              Scaffold(
-                body: _buildBody(context),
-              ),
-              _isLoading ? FullScreenLoader() : Container()
-            ],
-          );
+    return Stack(
+      children: <Widget>[
+        Scaffold(
+          body: _buildBody(context),
+        ),
+        _isLoading ? FullScreenLoader() : Container()
+      ],
+    );
   }
 
   SafeArea _buildBody(BuildContext context) {
@@ -130,8 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   textColor: Colors.white,
                   child: Text('Get started'),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)
-                  ),
+                      borderRadius: BorderRadius.circular(5.0)),
                 ),
               )
             ],
@@ -236,17 +231,13 @@ class _MyHomePageState extends State<MyHomePage> {
         context: context,
         type: AlertType.error,
         title: "Oops!",
-        desc:
-        "An error has occurred",
+        desc: "An error has occurred",
         buttons: [
           DialogButton(
             child: Text("Dismiss",
-                style: Theme.of(context)
-                    .textTheme
-                    .title
-                    .copyWith(
-                  color: Colors.white,
-                )),
+                style: Theme.of(context).textTheme.title.copyWith(
+                      color: Colors.white,
+                    )),
             color: Colors.red,
             onPressed: () {
               Navigator.of(context).pop();
@@ -277,17 +268,13 @@ class _MyHomePageState extends State<MyHomePage> {
         context: context,
         type: AlertType.error,
         title: "Oops!",
-        desc:
-        "An error has occurred",
+        desc: "An error has occurred",
         buttons: [
           DialogButton(
             child: Text("Dismiss",
-                style: Theme.of(context)
-                    .textTheme
-                    .title
-                    .copyWith(
-                  color: Colors.white,
-                )),
+                style: Theme.of(context).textTheme.title.copyWith(
+                      color: Colors.white,
+                    )),
             color: Colors.red,
             onPressed: () {
               Navigator.of(context).pop();
