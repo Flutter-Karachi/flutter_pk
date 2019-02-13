@@ -26,6 +26,7 @@ dependencies:
   cached_network_image: ^0.5.1
   rflutter_alert: ^1.0.2
   shared_preferences: ^0.4.3
+  smooth_star_rating: 1.0.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

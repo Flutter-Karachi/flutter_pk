@@ -33,6 +33,7 @@ class Speaker {
 }
 
 class Session {
+  final String id;
   final String title;
   final DateTime startDateTime;
   final DateTime endDateTime;
@@ -43,6 +44,7 @@ class Session {
   final DocumentReference reference;
 
   Session({
+    this.id,
     this.title,
     this.endDateTime,
     this.startDateTime,
@@ -54,7 +56,8 @@ class Session {
   });
 
   Session.fromMap(Map<String, dynamic> map, {this.reference})
-      : title = map['title'],
+      : id = map['id'],
+        title = map['title'],
         endDateTime = map['endDateTime'],
         startDateTime = map['startDateTime'],
         color = map['color'],

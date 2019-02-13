@@ -144,9 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           SprungBox(
             damped: Damped.critically,
-            callback: (bool value) {
-              setState(() => _showSwipeText = value);
-            },
+            callback: (bool value) {},
           ),
           Column(
             children: <Widget>[
@@ -166,8 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 secondChild: Padding(
                   padding: const EdgeInsets.only(top: 32.0),
                   child: Text(
-                    'Swipe right to proceed',
-                    style: TextStyle(color: Colors.transparent),
+                    'Please wait ...',
                   ),
                 ),
               ),
@@ -283,7 +280,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ).show();
     } finally {
-      setState(() => _isFetchingSharedPreferences = false);
+      setState(() {
+        _isFetchingSharedPreferences = false;
+        _showSwipeText = true;
+      });
     }
   }
 }

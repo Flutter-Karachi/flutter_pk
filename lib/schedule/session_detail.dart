@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_pk/feedback/feedback.dart';
 import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/schedule/model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class SessionDetailPage extends StatelessWidget {
   final Session session;
@@ -32,7 +33,16 @@ class SessionDetailPage extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => FullScreenFeedbackDialog(
+                    session: session,
+                  ),
+              fullscreenDialog: true
+            ),
+          );
+        },
         icon: Icon(
           Icons.rate_review,
           color: ColorDictionary.stringToColor[session.textColor],

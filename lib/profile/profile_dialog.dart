@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_pk/caches/user.dart';
 import 'package:flutter_pk/contribution/contribution_dialog.dart';
 import 'package:flutter_pk/global.dart';
@@ -173,8 +174,10 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
                       userCache.user.id,
                       useCached: false,
                     );
-                    setState(() {
-                      _user = user;
+                    Timer(Duration(seconds: 2), () {
+                      setState(() {
+                        _user = user;
+                      });
                     });
                   },
                 )
