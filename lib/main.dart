@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pk/caches/user.dart';
 import 'package:flutter_pk/contribution/contribution_dialog.dart';
-import 'package:flutter_pk/dialogs/custom_error_dialog.dart';
 import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/home_master.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,7 +24,7 @@ class MyApp extends StatelessWidget {
     );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Flutter Pakistan',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

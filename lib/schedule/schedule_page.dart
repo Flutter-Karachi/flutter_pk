@@ -5,7 +5,6 @@ import 'package:flutter_pk/schedule/model.dart';
 import 'package:flutter_pk/schedule/session_detail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_pk/widgets/custom_app_bar.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class SchedulePage extends StatefulWidget {
   @override

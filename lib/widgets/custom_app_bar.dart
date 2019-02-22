@@ -15,20 +15,22 @@ class CustomAppBar extends StatefulWidget {
 
 class CustomAppBarState extends State<CustomAppBar> {
   String eventDate = '';
+  String eventTitle = '';
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    var date = Firestore.instance
+    var eventDetails = Firestore.instance
         .collection(FireStoreKeys.dateCollection)
         .snapshots()
         .first;
-    date.then((onValue) {
+    eventDetails.then((onValue) {
       setState(() {
         eventDate = formatDate(
           onValue.documents.first['date'],
           DateFormats.shortUiDateFormat,
         );
+        eventTitle = onValue.documents.first['eventTitle'];
       });
     });
   }
@@ -67,35 +69,39 @@ class CustomAppBarState extends State<CustomAppBar> {
                 ),
               ),
             ),
-            Column(
-              children: <Widget>[
-                Text(
-                  widget.title,
-                  style: Theme.of(context)
-                      .textTheme
-                      .title
-                      .copyWith(fontSize: 24.0),
-                ),
-                Text(eventDate)
-              ],
-            ),
-            GestureDetector(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Container(
-                    height: 30.0,
-                    width: 30.0,
-                    decoration: new BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Theme.of(context).primaryColorDark),
-                    child: Icon(
-                      Icons.location_on,
-                      color: Colors.white,
-                      size: 20.0,
-                    ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    eventTitle,
+                    style: Theme.of(context)
+                        .textTheme
+                        .title
+                        .copyWith(fontSize: 20.0),
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.clip,
                   ),
+                  Text(eventDate)
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Container(
+                height: 30.0,
+                width: 30.0,
+                decoration: new BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.transparent),
+                child: Icon(
+                  Icons.location_on,
+                  color: Colors.white,
+                  size: 20.0,
                 ),
-                onTap: () {}),
+              ),
+            ),
           ],
         ),
       ),

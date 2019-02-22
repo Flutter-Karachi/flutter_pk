@@ -12,6 +12,7 @@ abstract class Routes {
 abstract class GlobalConstants {
   static const int phoneNumberMaxLength = 13;
   static const int entryMaxLength = 50;
+  static const String qrKey = "thisisahighlyencryptedaubykhanstringthatisbeingusedforfluttermeetupqrscan";
   static const String addNumberDisplayText =
       'Add your phone number in order to receive event updates.';
   static const String editNumberDisplayText =
@@ -27,6 +28,9 @@ abstract class FireStoreKeys {
   static const String dateCollection = 'dates';
   static const String sessionCollection = 'sessions';
   static const String speakerCollection = 'speakers';
+  static const String attendanceCollection = 'attendance';
+  static const String attendeesCollection = 'attendees';
+  static const String dateReferenceString = '16032019';
 }
 
 abstract class ColorDictionary {
@@ -37,7 +41,11 @@ abstract class ColorDictionary {
     'blue': Colors.blue,
     'white': Colors.white,
     'black': Colors.black,
-    'blueGrey': Colors.blueGrey
+    'blueGrey': Colors.blueGrey,
+    'lightBlue': Colors.lightBlue,
+    'brown': Colors.brown,
+    'teal': Colors.teal,
+    'indigoAccent': Colors.indigoAccent
   };
 }
 

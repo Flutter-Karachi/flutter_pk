@@ -11,7 +11,6 @@ class UserCache {
     }
     _user = User.fromSnapshot(
         await Firestore.instance.collection('users').document(id).get());
-    print(_user.isContributor);
     return _user;
   }
 
@@ -49,7 +48,6 @@ class User {
         isRegistered = map['isRegistered'],
         isContributor = map['isContributor'],
         mobileNumber = map['mobileNumber'] {
-    print(map['contribution']);
     if (isContributor) contribution = Contribution.fromMap(map['contribution']);
   }
 
