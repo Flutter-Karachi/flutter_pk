@@ -30,6 +30,7 @@ class CustomAppBarState extends State<CustomAppBar> {
           onValue.documents.first['date'],
           DateFormats.shortUiDateFormat,
         );
+        eventDateTimeCache.setDateTime(onValue.documents.first['date']);
         eventTitle = onValue.documents.first['eventTitle'];
       });
     });
@@ -93,8 +94,7 @@ class CustomAppBarState extends State<CustomAppBar> {
                 height: 30.0,
                 width: 30.0,
                 decoration: new BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.transparent),
+                    shape: BoxShape.circle, color: Colors.transparent),
                 child: Icon(
                   Icons.location_on,
                   color: Colors.white,

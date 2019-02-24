@@ -41,6 +41,7 @@ class Session {
   final String textColor;
   final String description;
   final String speakerId;
+  final List speakers;
   final DocumentReference reference;
 
   Session({
@@ -53,6 +54,7 @@ class Session {
     this.description,
     this.speakerId,
     this.reference,
+    this.speakers
   });
 
   Session.fromMap(Map<String, dynamic> map, {this.reference})
@@ -63,6 +65,7 @@ class Session {
         color = map['color'],
         textColor = map['textColor'],
         speakerId = map['speakerId'],
+        speakers = map['speakers'],
         description = map['description'];
 
   Session.fromSnapshot(DocumentSnapshot snapshot)

@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pk/caches/EventDate.dart';
+import 'package:flutter_pk/caches/location.dart';
 import 'package:flutter_pk/caches/user.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,7 +47,8 @@ abstract class ColorDictionary {
     'lightBlue': Colors.lightBlue,
     'brown': Colors.brown,
     'teal': Colors.teal,
-    'indigoAccent': Colors.indigoAccent
+    'indigoAccent': Colors.indigoAccent,
+    'grey': Colors.grey
   };
 }
 
@@ -55,3 +58,7 @@ final Future<SharedPreferences> sharedPreferences =
     SharedPreferences.getInstance();
 
 UserCache userCache = new UserCache();
+
+LocationCache locationCache = new LocationCache();
+
+EventDateTimeCache eventDateTimeCache = new EventDateTimeCache();

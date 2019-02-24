@@ -37,11 +37,10 @@ class SessionDetailPage extends StatelessWidget {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => FullScreenFeedbackDialog(
-                    session: session,
-                  ),
-              fullscreenDialog: true
-            ),
+                builder: (context) => FullScreenFeedbackDialog(
+                      session: session,
+                    ),
+                fullscreenDialog: true),
           );
         },
         icon: Icon(
@@ -65,84 +64,14 @@ class SessionDetailPage extends StatelessWidget {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
-                    child: Center(child: Text('About speaker')),
+                    child: Center(
+                      child: Text(
+                          'About ${session.speakers.length > 1 ? 'speakers' : 'speaker'}'),
+                    ),
                   ),
-                  FutureBuilder<Speaker>(
-                      future: _getData(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(top: 16.0),
-                                child: Center(
-                                  child: Stack(
-                                    children: <Widget>[
-                                      Container(
-                                        height: 70.0,
-                                        width: 70.0,
-                                        decoration: new BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                            image: AssetImage(
-                                              'assets/ic_person.png',
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: 70.0,
-                                        width: 70.0,
-                                        decoration: new BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                            image: CachedNetworkImageProvider(
-                                              snapshot.data.photoUrl,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              ListTile(
-                                title: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: <Widget>[
-                                      Text(
-                                        snapshot.data.name,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 16.0),
-                                        child: Text(
-                                          snapshot.data.description,
-                                          textAlign: TextAlign.justify,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        } else {
-                          return Center(
-                            child: Text(
-                              'Fetching speaker details',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .title
-                                  .copyWith(color: Colors.grey),
-                            ),
-                          );
-                        }
-                      }),
+                  session.speakers.length > 1
+                      ? _buildMultiSpeakerDetail()
+                      : _buildSingleSpeakerDetail(),
                   Divider(),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -190,11 +119,136 @@ class SessionDetailPage extends StatelessWidget {
     );
   }
 
+  FutureBuilder<List<Speaker>> _buildMultiSpeakerDetail() {
+    return FutureBuilder<List<Speaker>>(
+        future: _getMultiSpeakerData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var speakerOne = snapshot.data.first;
+            var speakerTwo = snapshot.data[1];
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(child: _buildSpeakerView(speakerOne)),
+                Expanded(child: _buildSpeakerView(speakerTwo)),
+              ],
+            );
+          } else {
+            return Center(
+              child: Text(
+                'Fetching speaker details',
+                style: Theme.of(context)
+                    .textTheme
+                    .title
+                    .copyWith(color: Colors.grey),
+              ),
+            );
+          }
+        });
+  }
+
+  FutureBuilder<Speaker> _buildSingleSpeakerDetail() {
+    return FutureBuilder<Speaker>(
+        future: _getData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return _buildSpeakerView(snapshot.data);
+          } else {
+            return Center(
+              child: Text(
+                'Fetching speaker details',
+                style: Theme.of(context)
+                    .textTheme
+                    .title
+                    .copyWith(color: Colors.grey),
+              ),
+            );
+          }
+        });
+  }
+
+  Column _buildSpeakerView(Speaker speaker) {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 16.0),
+          child: Center(
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  height: 70.0,
+                  width: 70.0,
+                  decoration: new BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: AssetImage(
+                        'assets/ic_person.png',
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 70.0,
+                  width: 70.0,
+                  decoration: new BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(
+                        speaker.photoUrl,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        ListTile(
+          title: Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  speaker.name,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Text(
+                    speaker.description,
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Future<Speaker> _getData() async {
     CollectionReference reference =
         await Firestore.instance.collection(FireStoreKeys.speakerCollection);
     var speaker =
         Speaker.fromSnapshot(await reference.document(session.speakerId).get());
     return speaker;
+  }
+
+  Future<List<Speaker>> _getMultiSpeakerData() async {
+    CollectionReference reference =
+        await Firestore.instance.collection(FireStoreKeys.speakerCollection);
+    var speakerOne = Speaker.fromSnapshot(
+        await reference.document(session.speakers[0]).get());
+    var speakerTwo = Speaker.fromSnapshot(
+        await reference.document(session.speakers[1]).get());
+    List<Speaker> list = List<Speaker>();
+    list.addAll(<Speaker>[
+      speakerOne,
+      speakerTwo,
+    ]);
+    return list;
   }
 }

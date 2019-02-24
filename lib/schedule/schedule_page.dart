@@ -164,7 +164,13 @@ class SchedulePageState extends State<SchedulePage>
         ),
         Padding(
           padding: const EdgeInsets.only(top: 16.0),
-        )
+        ),
+        session.id == 'end' ? Divider() : Container(),
+        session.id == 'end'
+            ? Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+              )
+            : Container()
       ],
     );
   }

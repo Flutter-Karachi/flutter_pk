@@ -147,16 +147,6 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
                   height: 70.0,
                   width: 70.0,
                 ),
-                Center(
-                  child: Text(
-                    'More features coming soon!',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .title
-                        .copyWith(color: Colors.black38),
-                  ),
-                ),
               ],
             ),
           ),

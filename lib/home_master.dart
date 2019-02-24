@@ -24,8 +24,6 @@ class HomePageMasterState extends State<HomePageMaster> {
   int _selectedIndex = 0;
   String floatingButtonLabel = 'Register';
   IconData floatingButtonIcon = Icons.group_work;
-  String latitude = '24.863690';
-  String longitude = '67.075474';
   bool _isLoading = false;
   User _user = new User();
   List<Widget> widgets = <Widget>[
@@ -55,25 +53,6 @@ class HomePageMasterState extends State<HomePageMaster> {
             ? null
             : FloatingActionButton.extended(
                 onPressed: _floatingButtonTapModerator,
-//          Alert(
-//                  context: context,
-//                  type: AlertType.info,
-//                  title: "Information!",
-//                  desc:
-//                      "You will be able to scan a QR on the event day!\nCheers!",
-//                  buttons: [
-//                    DialogButton(
-//                      child: Text("Cool!",
-//                          style: Theme.of(context).textTheme.title.copyWith(
-//                                color: Colors.white,
-//                              )),
-//                      color: Colors.green,
-//                      onPressed: () {
-//                        Navigator.of(context).pop();
-//                      },
-//                    )
-//                  ],
-//                ).show()
                 icon: Icon(floatingButtonIcon),
                 label: Text(floatingButtonLabel),
               ),
@@ -123,7 +102,28 @@ class HomePageMasterState extends State<HomePageMaster> {
     if (_selectedIndex == 2) {
       _navigateToGoogleMaps();
     } else if (_user.isRegistered) {
-      _scanQr();
+      if (DateTime.now().isBefore(eventDateTimeCache.eventDateTime)) {
+        Alert(
+          context: context,
+          type: AlertType.info,
+          title: "Information!",
+          desc: "You will be able to scan a QR on the event day!\nCheers!",
+          buttons: [
+            DialogButton(
+              child: Text("Cool!",
+                  style: Theme.of(context).textTheme.title.copyWith(
+                        color: Colors.white,
+                      )),
+              color: Colors.green,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        ).show();
+      } else {
+        _scanQr();
+      }
     } else {
       _navigateToRegistration(context);
     }
@@ -134,8 +134,9 @@ class HomePageMasterState extends State<HomePageMaster> {
     String googleUrl = '';
     if (isIOS) {
       googleUrl =
-          'comgooglemapsurl://maps.google.com/maps?f=d&daddr=$latitude,$longitude&sspn=0.2,0.1';
-      String appleMapsUrl = 'https://maps.apple.com/?sll=$latitude,$longitude';
+          'comgooglemapsurl://maps.google.com/maps?f=d&daddr=${locationCache.latitude},${locationCache.longitude}&sspn=0.2,0.1';
+      String appleMapsUrl =
+          'https://maps.apple.com/?sll=${locationCache.latitude},${locationCache.longitude}';
       if (await canLaunch("comgooglemaps://")) {
         print('launching com googleUrl');
         await launch(googleUrl);
@@ -144,15 +145,16 @@ class HomePageMasterState extends State<HomePageMaster> {
         await launch(appleMapsUrl);
       } else {
         await launch(
-            'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude');
+            'https://www.google.com/maps/search/?api=1&query=${locationCache.latitude},${locationCache.longitude}');
       }
     } else {
-      googleUrl = 'google.navigation:q=$latitude,$longitude&mode=d';
+      googleUrl =
+          'google.navigation:q=${locationCache.latitude},${locationCache.longitude}&mode=d';
       if (await canLaunch(googleUrl)) {
         await launch(googleUrl);
       } else {
         await launch(
-            'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude');
+            'https://www.google.com/maps/search/?api=1&query=${locationCache.latitude},${locationCache.longitude}');
       }
     }
   }

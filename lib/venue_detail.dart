@@ -120,6 +120,10 @@ class VenueDetailPageState extends State<VenueDetailPage> {
         .snapshots()
         .first;
     eventDetails.then((onValue) {
+      locationCache.setLocation(
+        onValue.documents.first['venue']['location']['longitude'].toString(),
+        onValue.documents.first['venue']['location']['latitude'].toString(),
+      );
       _eventDetails = EventDetails(
           reference: onValue.documents.first.reference,
           venue: Venue(
