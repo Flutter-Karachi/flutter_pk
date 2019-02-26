@@ -54,66 +54,68 @@ class SessionDetailPage extends StatelessWidget {
         ),
         backgroundColor: ColorDictionary.stringToColor[session.color],
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: Column(
-          children: <Widget>[
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Center(
-                      child: Text(
-                          'About ${session.speakers.length > 1 ? 'speakers' : 'speaker'}'),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Column(
+            children: <Widget>[
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Center(
+                        child: Text(
+                            'About ${session.speakers.length > 1 ? 'speakers' : 'speaker'}'),
+                      ),
                     ),
-                  ),
-                  session.speakers.length > 1
-                      ? _buildMultiSpeakerDetail()
-                      : _buildSingleSpeakerDetail(),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: ColorDictionary.stringToColor[session.color],
-                          borderRadius: BorderRadius.circular(10.0)),
-                      child: ListTile(
-                        title: Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Center(
-                            child: Text(
-                              session.title,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: ColorDictionary
-                                    .stringToColor[session.textColor],
+                    session.speakers.length > 1
+                        ? _buildMultiSpeakerDetail()
+                        : _buildSingleSpeakerDetail(),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: ColorDictionary.stringToColor[session.color],
+                            borderRadius: BorderRadius.circular(10.0)),
+                        child: ListTile(
+                          title: Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Center(
+                              child: Text(
+                                session.title,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorDictionary
+                                      .stringToColor[session.textColor],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        subtitle: Padding(
-                          padding:
-                              const EdgeInsets.only(top: 16.0, bottom: 8.0),
-                          child: Text(
-                            session.description,
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                                color: ColorDictionary
-                                    .stringToColor[session.textColor]),
+                          subtitle: Padding(
+                            padding:
+                                const EdgeInsets.only(top: 16.0, bottom: 8.0),
+                            child: Text(
+                              session.description,
+                              textAlign: TextAlign.justify,
+                              style: TextStyle(
+                                  color: ColorDictionary
+                                      .stringToColor[session.textColor]),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 60.0,
-                  )
-                ],
+                    SizedBox(
+                      height: 60.0,
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

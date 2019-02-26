@@ -102,6 +102,7 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
   Widget _buildBody() {
     return Expanded(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Column(
@@ -136,17 +137,23 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
               ),
             ],
           ),
+          Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: Text(
+              'You can provide session feedback after sessions end.',
+              textAlign: TextAlign.center,
+            ),
+          ),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SizedBox(
-                  child: Image(
-                    image: AssetImage('assets/loader.png'),
-                  ),
-                  height: 70.0,
-                  width: 70.0,
-                ),
+//                Padding(
+//                  padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+//                  child: Image(
+//                    image: AssetImage('assets/feature.png'),
+//                  ),
+//                ),
               ],
             ),
           ),
@@ -172,7 +179,19 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
                   },
                 )
               : Container(),
-          Text('Built with Flutter & Material'),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+            child: SizedBox(
+              height: 50.0,
+              child: Image(
+                image: AssetImage('assets/feature.png'),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text('Built with Flutter & Material'),
+          ),
         ],
       ),
     );
