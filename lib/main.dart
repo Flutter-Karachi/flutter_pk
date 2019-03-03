@@ -74,14 +74,19 @@ class _MyHomePageState extends State<MyHomePage> {
       child: new Swiper.children(
         autoplay: false,
         loop: false,
-        pagination: new SwiperPagination(
-          margin: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 30.0),
-          builder: new DotSwiperPaginationBuilder(
-              color: Colors.black26,
-              activeColor: Colors.blue,
-              size: 10.0,
-              activeSize: 15.0),
-        ),
+        physics: _isFetchingSharedPreferences
+            ? NeverScrollableScrollPhysics()
+            : ScrollPhysics(),
+        pagination: _isFetchingSharedPreferences
+            ? null
+            : new SwiperPagination(
+                margin: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 30.0),
+                builder: new DotSwiperPaginationBuilder(
+                    color: Colors.black26,
+                    activeColor: Colors.blue,
+                    size: 10.0,
+                    activeSize: 15.0),
+              ),
         children: <Widget>[
           _buildFirstSwiperControlPage(context),
           _buildSecondSwiperControlPage(context),
@@ -253,7 +258,7 @@ class _MyHomePageState extends State<MyHomePage> {
       var userId = prefs.get(SharedPreferencesKeys.firebaseUserId);
       if (userId != null) {
         await userCache.getCurrentUser(userId);
-        Navigator.of(context).pushNamedAndRemoveUntil(
+        await Navigator.of(context).pushNamedAndRemoveUntil(
           Routes.home_master,
           ModalRoute.withName(Routes.main),
         );

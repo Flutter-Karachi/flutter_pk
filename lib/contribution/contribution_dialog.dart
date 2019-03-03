@@ -18,6 +18,7 @@ class FullScreenContributionDialogState
   bool _isLogisticsAdministrator = false;
   bool _isSpeaker = false;
   bool _isSocialMediaMarketingPerson = false;
+  bool _isError = false;
 
   @override
   void initState() {
@@ -107,6 +108,7 @@ class FullScreenContributionDialogState
             title: Text('Volunteer'),
             value: _isVolunteer,
             onChanged: (bool value) {
+              setState(() => _isError = false);
               setState(() => _isVolunteer = value);
             },
           ),
@@ -114,6 +116,7 @@ class FullScreenContributionDialogState
             title: Text('Administration & Logistics'),
             value: _isLogisticsAdministrator,
             onChanged: (bool value) {
+              setState(() => _isError = false);
               setState(() => _isLogisticsAdministrator = value);
             },
           ),
@@ -121,6 +124,7 @@ class FullScreenContributionDialogState
             title: Text('Speaker'),
             value: _isSpeaker,
             onChanged: (bool value) {
+              setState(() => _isError = false);
               setState(() => _isSpeaker = value);
             },
           ),
@@ -128,6 +132,7 @@ class FullScreenContributionDialogState
             title: Text('Social media marketing'),
             value: _isSocialMediaMarketingPerson,
             onChanged: (bool value) {
+              setState(() => _isError = false);
               setState(() => _isSocialMediaMarketingPerson = value);
             },
           ),
@@ -150,13 +155,24 @@ class FullScreenContributionDialogState
                 onPressed: _submitDetails,
               ),
             ),
-          )
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: _isError
+                ? Text(
+                    'Please select at least one option. You can also SKIP this step from the top right corner of this screen',
+                    style: TextStyle(color: Colors.red),
+                    textAlign: TextAlign.center,
+                  )
+                : Container(),
+          ),
         ],
       ),
     );
   }
 
   void _submitDetails() async {
+    if (!_validate()) return;
     try {
       Firestore.instance.runTransaction((transaction) async {
         await transaction.update(userCache.user.reference, {
@@ -177,17 +193,13 @@ class FullScreenContributionDialogState
         context: context,
         type: AlertType.error,
         title: "Oops!",
-        desc:
-        "An error has occurred",
+        desc: "An error has occurred",
         buttons: [
           DialogButton(
             child: Text("Dismiss",
-                style: Theme.of(context)
-                    .textTheme
-                    .title
-                    .copyWith(
-                  color: Colors.white,
-                )),
+                style: Theme.of(context).textTheme.title.copyWith(
+                      color: Colors.white,
+                    )),
             color: Colors.red,
             onPressed: () {
               Navigator.of(context).pop();
@@ -277,5 +289,17 @@ class FullScreenContributionDialogState
         ),
       ],
     );
+  }
+
+  bool _validate() {
+    if (!_isSocialMediaMarketingPerson &&
+        !_isSpeaker &&
+        !_isLogisticsAdministrator &&
+        !_isVolunteer) {
+      setState(() => _isError = true);
+      return false;
+    }
+
+    return true;
   }
 }

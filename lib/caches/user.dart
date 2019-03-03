@@ -25,6 +25,7 @@ class User {
   final String mobileNumber;
   final bool isRegistered;
   final bool isContributor;
+  final bool isPresent;
   final DocumentReference reference;
 
   Contribution contribution;
@@ -37,6 +38,7 @@ class User {
     this.photoUrl,
     this.isRegistered = false,
     this.isContributor = false,
+    this.isPresent = false,
     this.mobileNumber,
   });
 
@@ -47,6 +49,7 @@ class User {
         photoUrl = map['photoUrl'],
         isRegistered = map['isRegistered'],
         isContributor = map['isContributor'],
+        isPresent = map['isPresent'],
         mobileNumber = map['mobileNumber'] {
     if (isContributor) contribution = Contribution.fromMap(map['contribution']);
   }
@@ -58,6 +61,7 @@ class User {
         "photoUrl": photoUrl,
         "isRegistered": isRegistered,
         "mobileNumber": mobileNumber,
+        "isPresent": isPresent,
         "isContributor": isContributor
       };
 

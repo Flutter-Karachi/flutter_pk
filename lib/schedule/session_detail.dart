@@ -6,6 +6,7 @@ import 'package:flutter_pk/feedback/feedback.dart';
 import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/schedule/model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class SessionDetailPage extends StatelessWidget {
   final Session session;
@@ -35,13 +36,32 @@ class SessionDetailPage extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-                builder: (context) => FullScreenFeedbackDialog(
-                      session: session,
-                    ),
-                fullscreenDialog: true),
-          );
+          if (DateTime.now().isAfter(
+            eventDateTimeCache.eventDateTime.add(
+              Duration(days: 1),
+            ),
+          )) {
+            _navigateToFeedback(context);
+          } else {
+            Alert(
+              context: context,
+              type: AlertType.info,
+              title: "Information!",
+              desc: "You will be able to provide feedback once the event day ends!",
+              buttons: [
+                DialogButton(
+                  child: Text("Cool!",
+                      style: Theme.of(context).textTheme.title.copyWith(
+                            color: Colors.white,
+                          )),
+                  color: Colors.green,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ).show();
+          }
         },
         icon: Icon(
           Icons.rate_review,
@@ -99,7 +119,6 @@ class SessionDetailPage extends StatelessWidget {
                                 const EdgeInsets.only(top: 16.0, bottom: 8.0),
                             child: Text(
                               session.description,
-                              textAlign: TextAlign.justify,
                               style: TextStyle(
                                   color: ColorDictionary
                                       .stringToColor[session.textColor]),
@@ -118,6 +137,16 @@ class SessionDetailPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _navigateToFeedback(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) => FullScreenFeedbackDialog(
+                session: session,
+              ),
+          fullscreenDialog: true),
     );
   }
 
@@ -220,7 +249,6 @@ class SessionDetailPage extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 16.0),
                   child: Text(
                     speaker.description,
-                    textAlign: TextAlign.justify,
                   ),
                 ),
               ],

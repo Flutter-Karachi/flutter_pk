@@ -175,6 +175,7 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
                       setState(() {
                         _user = user;
                       });
+                      _setUser();
                     });
                   },
                 )

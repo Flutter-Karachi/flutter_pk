@@ -25,6 +25,7 @@ class HomePageMasterState extends State<HomePageMaster> {
   String floatingButtonLabel = 'Register';
   IconData floatingButtonIcon = Icons.group_work;
   bool _isLoading = false;
+  bool _isUserPresent = false;
   User _user = new User();
   List<Widget> widgets = <Widget>[
     SchedulePage(),
@@ -38,7 +39,7 @@ class HomePageMasterState extends State<HomePageMaster> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _setUser();
+    _setUser(true);
   }
 
   @override
@@ -102,12 +103,35 @@ class HomePageMasterState extends State<HomePageMaster> {
     if (_selectedIndex == 2) {
       _navigateToGoogleMaps();
     } else if (_user.isRegistered) {
-      if (DateTime.now().isBefore(eventDateTimeCache.eventDateTime)) {
+      if (!_isUserPresent) {
+        if (DateTime.now().isBefore(eventDateTimeCache.eventDateTime)) {
+          Alert(
+            context: context,
+            type: AlertType.info,
+            title: "Information!",
+            desc: "You will be able to scan a QR on the event day!\nCheers!",
+            buttons: [
+              DialogButton(
+                child: Text("Cool!",
+                    style: Theme.of(context).textTheme.title.copyWith(
+                          color: Colors.white,
+                        )),
+                color: Colors.green,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          ).show();
+        } else {
+          _scanQr();
+        }
+      } else {
         Alert(
           context: context,
           type: AlertType.info,
           title: "Information!",
-          desc: "You will be able to scan a QR on the event day!\nCheers!",
+          desc: "You are already marked present! \nEnjoy the event!",
           buttons: [
             DialogButton(
               child: Text("Cool!",
@@ -121,8 +145,6 @@ class HomePageMasterState extends State<HomePageMaster> {
             )
           ],
         ).show();
-      } else {
-        _scanQr();
       }
     } else {
       _navigateToRegistration(context);
@@ -190,6 +212,13 @@ class HomePageMasterState extends State<HomePageMaster> {
           {'userName': userCache.user.name},
           merge: true,
         );
+        CollectionReference reference =
+            Firestore.instance.collection(FireStoreKeys.userCollection);
+
+        await reference
+            .document(userCache.user.id)
+            .setData({"isPresent": true}, merge: true);
+        _setUser(true);
         Alert(
           context: context,
           type: AlertType.success,
@@ -203,6 +232,9 @@ class HomePageMasterState extends State<HomePageMaster> {
                       )),
               color: Colors.green,
               onPressed: () {
+                setState(() {
+                  _isUserPresent = true;
+                });
                 Navigator.of(context).pop();
               },
             )
@@ -267,13 +299,17 @@ class HomePageMasterState extends State<HomePageMaster> {
     setState(() {
       _user = user;
     });
-    _setUser();
+    _setUser(false);
   }
 
-  Future _setUser() async {
-    var user = await userCache.getCurrentUser(userCache.user.id);
+  Future _setUser(bool useCached) async {
+    var user = await userCache.getCurrentUser(
+      userCache.user.id,
+      useCached: useCached,
+    );
     setState(() {
       _user = user;
+      _isUserPresent = user.isPresent;
       floatingButtonLabel = _user.isRegistered ? 'Scan QR' : 'Register';
       floatingButtonIcon =
           _user.isRegistered ? Icons.center_focus_weak : Icons.group_work;
