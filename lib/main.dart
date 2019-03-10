@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ? NeverScrollableScrollPhysics()
             : ScrollPhysics(),
         pagination: _isFetchingSharedPreferences
-            ? null
+            ? SwiperPagination()
             : new SwiperPagination(
                 margin: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 30.0),
                 builder: new DotSwiperPaginationBuilder(

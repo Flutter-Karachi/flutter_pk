@@ -140,7 +140,7 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
           Padding(
             padding: const EdgeInsets.all(32.0),
             child: Text(
-              'You can provide session feedback after sessions end.',
+              'You can provide session feedback after the event day ends.',
               textAlign: TextAlign.center,
             ),
           ),
