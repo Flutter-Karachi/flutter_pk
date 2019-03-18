@@ -254,7 +254,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void _getSharedPreferences() async {
     setState(() => _isFetchingSharedPreferences = true);
     try {
-      final SharedPreferences prefs = await sharedPreferences;
+      final sharedPrefsFuture = sharedPreferences;
+      final waitFuture = Future.delayed(Duration(seconds: 5));
+      final results = await Future.wait([sharedPrefsFuture, waitFuture]);
+
+      final SharedPreferences prefs = results[0];//await sharedPreferences;
       var userId = prefs.get(SharedPreferencesKeys.firebaseUserId);
       if (userId != null) {
         await userCache.getCurrentUser(userId);

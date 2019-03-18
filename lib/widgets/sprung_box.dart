@@ -30,12 +30,16 @@ class _SprungBoxState extends State<SprungBox>
   }
 
   void _toggleOffset() async {
-    await Future.delayed(new Duration(milliseconds: 500));
-    setState(() {
-      this._isOffset = !this._isOffset;
-    });
-    await Future.delayed(new Duration(milliseconds: 1500));
-    widget.callback(true);
+    await Future.delayed(
+      new Duration(milliseconds: 500),
+      () => setState(() {
+            this._isOffset = !this._isOffset;
+          }),
+    );
+    await Future.delayed(
+      new Duration(milliseconds: 1500),
+      () => widget.callback(true),
+    );
   }
 
   @override
