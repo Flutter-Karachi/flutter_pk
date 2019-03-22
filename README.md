@@ -22,8 +22,16 @@ The app makes considerable use of following Firebase components:
 ### Setting up
 This repo does not contain some required Firebase setup. Follow [this guide](https://firebase.google.com/docs/flutter/setup) to setup Cloud Firestore for this app. There's also a good [video walkthrough](https://www.youtube.com/watch?v=DqJ_KjFzL9I) for setting up. 
 
-### Firebase schema
-_Coming soon. Meanwhile try and figure it out yourself from code :)_
+### Importing Firebase data
+The app depends on an already setup Firestore data in order to run properly which is present in `/data/firebase-export.json`. To import this data, follow these steps:
+1. Install [Firestore Import/Export utility](https://www.npmjs.com/package/node-firestore-import-export)
+2. [Export your Firebase private key](https://www.npmjs.com/package/node-firestore-import-export#retrieving-google-cloud-account-credentials), it will be automatically downloaded to your computer. Copy this file to the `/data` folder. Rename this file to `firebase-credentials.json`.
+3. Open terminal and go to `/data` folder. 
+4. Run the following command
+```
+$ firestore-import -a firebase-credentials.json -b firebase-export.json
+```
+5. After this command is executed successfully, go to your Database section of your Firebase console to make sure that the data is created there.
 
 # Getting started with Flutter
 A few resources to get you started if this is your first Flutter project:

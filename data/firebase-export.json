@@ -1,0 +1,257 @@
+{
+  "__collections__": {
+    "attendance": {
+      "16032019": {
+        "attendanceCount": 0,
+        "__collections__": {
+          "attendees": {}
+        }
+      }
+    },
+    "dates": {
+      "WJqsWCMmpTga6K4sbNz0": {
+        "date": {
+          "__datatype__": "timestamp",
+          "value": {
+            "_seconds": 1552676400,
+            "_nanoseconds": 0
+          }
+        },
+        "eventTitle": "Flutter live extended '19",
+        "venue": {
+          "location": {
+            "latitude": 24.86369,
+            "longitude": 67.075474
+          },
+          "title": "10Pearls",
+          "city": "Karachi",
+          "imageUrl": "https://pakvocation.com/wp-content/uploads/2017/12/10PEARLS.png",
+          "address": "8th floor, Parsa Tower, Main Shahrah-e-Faisal, Karachi"
+        },
+        "__collections__": {
+          "sessions": {
+            "Q2a930CWsxrTU3aXjBbK": {
+              "id": "pairCode",
+              "speakers": [
+                "sana",
+                "taha"
+              ],
+              "startDateTime": {
+                "__datatype__": "timestamp",
+                "value": {
+                  "_seconds": 1552717500,
+                  "_nanoseconds": 0
+                }
+              },
+              "speakerId": "taha",
+              "title": "Flutter development - Live code",
+              "endDateTime": {
+                "__datatype__": "timestamp",
+                "value": {
+                  "_seconds": 1552719600,
+                  "_nanoseconds": 0
+                }
+              },
+              "color": "teal",
+              "description": "A live code action by two Flutter developers, showcasing the delightful development experience while creating a complete application.",
+              "textColor": "white",
+              "__collections__": {}
+            },
+            "SDhaXrZZyMrVxLMVtWLM": {
+              "textColor": "white",
+              "id": "dart",
+              "speakers": [
+                "waleed"
+              ],
+              "startDateTime": {
+                "__datatype__": "timestamp",
+                "value": {
+                  "_seconds": 1552714500,
+                  "_nanoseconds": 0
+                }
+              },
+              "speakerId": "waleed",
+              "title": "Design with Flutter",
+              "endDateTime": {
+                "__datatype__": "timestamp",
+                "value": {
+                  "_seconds": 1552716900,
+                  "_nanoseconds": 0
+                }
+              },
+              "color": "blueGrey",
+              "description": "A talk on how Flutter goes a step ahead in helping designers get along with developers in order to achieve rapid development.",
+              "__collections__": {}
+            },
+            "ZmOtQvgTqbbpcq0OsT3z": {
+              "endDateTime": {
+                "__datatype__": "timestamp",
+                "value": {
+                  "_seconds": 1552735800,
+                  "_nanoseconds": 0
+                }
+              },
+              "color": "brown",
+              "description": "Live code a UI on Flutter. UI challenge will be given and the attendees will be coding the UI then and there!",
+              "textColor": "white",
+              "id": "uiChallenge",
+              "speakers": [
+                "auby",
+                "waleed"
+              ],
+              "startDateTime": {
+                "__datatype__": "timestamp",
+                "value": {
+                  "_seconds": 1552726800,
+                  "_nanoseconds": 0
+                }
+              },
+              "speakerId": "waleed",
+              "title": "Flutter UI challenge",
+              "__collections__": {}
+            },
+            "jjerkNAOg54TZErlH91p": {
+              "id": "break",
+              "startDateTime": {
+                "__datatype__": "timestamp",
+                "value": {
+                  "_seconds": 1552723200,
+                  "_nanoseconds": 0
+                }
+              },
+              "title": "Prayer & refreshments",
+              "endDateTime": {
+                "__datatype__": "timestamp",
+                "value": {
+                  "_seconds": 1552726800,
+                  "_nanoseconds": 0
+                }
+              },
+              "color": "amber",
+              "textColor": "black",
+              "__collections__": {}
+            },
+            "vsTQp4eUDeEMdlYhH6hz": {
+              "speakers": [
+                "waheeda",
+                "hussain"
+              ],
+              "startDateTime": {
+                "__datatype__": "timestamp",
+                "value": {
+                  "_seconds": 1552719900,
+                  "_nanoseconds": 0
+                }
+              },
+              "speakerId": "waheeda",
+              "title": "CI/CD with Codemagic",
+              "endDateTime": {
+                "__datatype__": "timestamp",
+                "value": {
+                  "_seconds": 1552721700,
+                  "_nanoseconds": 0
+                }
+              },
+              "color": "lightBlue",
+              "description": "An introduction and hands on, on how Codemagic helps flutter developers achieve continuous integration and continuous delivery.",
+              "textColor": "white",
+              "id": "cicd",
+              "__collections__": {}
+            },
+            "y9bKNPQoYIxt3zRB31PZ": {
+              "id": "end",
+              "speakers": [
+                "auby"
+              ],
+              "startDateTime": {
+                "__datatype__": "timestamp",
+                "value": {
+                  "_seconds": 1552722000,
+                  "_nanoseconds": 0
+                }
+              },
+              "speakerId": "auby",
+              "title": "Ending note",
+              "endDateTime": {
+                "__datatype__": "timestamp",
+                "value": {
+                  "_seconds": 1552723200,
+                  "_nanoseconds": 0
+                }
+              },
+              "color": "indigoAccent",
+              "description": "Some valuable announcements and updates about the next events.",
+              "textColor": "white",
+              "__collections__": {}
+            },
+            "yvAhvc07yrZwjIX9pIdK": {
+              "textColor": "white",
+              "id": "keynote",
+              "speakers": [
+                "auby"
+              ],
+              "startDateTime": {
+                "__datatype__": "timestamp",
+                "value": {
+                  "_seconds": 1552712400,
+                  "_nanoseconds": 0
+                }
+              },
+              "speakerId": "auby",
+              "title": "Keynote - introduction",
+              "endDateTime": {
+                "__datatype__": "timestamp",
+                "value": {
+                  "_seconds": 1552714200,
+                  "_nanoseconds": 0
+                }
+              },
+              "color": "green",
+              "description": "Learn about the latest product and platform innovations at Flutter Live Extended Keynote led by Asadullah Bin Yousuf.",
+              "__collections__": {}
+            }
+          }
+        }
+      }
+    },
+    "speakers": {
+      "auby": {
+        "photoUrl": "https://media.licdn.com/dms/image/C5603AQGLlMu1gNs1Vg/profile-displayphoto-shrink_200_200/0?e=1553126400&v=beta&t=0pGeAs9jYDYdyEnwqhwzdMxLECM-RsGVXqVezRbA0BM",
+        "name": "Asadullah bin Yousuf",
+        "description": "Asadullah is generally seen as a tech advocate and he has a passion to build high-quality software products. Mobile app is one of his focus areas and he has ample experience for developing on both major platforms i.e. iOS and Android. He is an active member of the global Flutter community and contributes through Medium articles, twitter, and community talks.",
+        "__collections__": {}
+      },
+      "hussain": {
+        "photoUrl": "https://media.licdn.com/dms/image/C4E03AQGbcgyRLHMQZQ/profile-displayphoto-shrink_800_800/0?e=1557360000&v=beta&t=VDRNZXn_BqYKP0FWx9T10luqh7n2tT9P_z373QFdHSQ",
+        "name": "Hussain Marvi",
+        "description": "Hussain Marvi has been associated with 10Pearls as a Senior Software Developer for 3 years and has an industry experience of more than 5 years. He’s been developing mobile apps using cutting-edge cross-platform mobile technologies like Xamarin, React Native, Flutter and Native Android apps. ",
+        "__collections__": {}
+      },
+      "sana": {
+        "description": "Sana Zehra is a software engineer involved in designing and development of software products. She is a lifelong learner and a technology enthusiast; with her experience in various back end technologies and cloud platform, she is involved in developing payment processing products at TPS Pakistan.",
+        "photoUrl": "https://media.licdn.com/dms/image/C4D03AQHl0iIo5VYg5Q/profile-displayphoto-shrink_800_800/0?e=1556755200&v=beta&t=rkFpZZyQmw1IhM_g5Weu_wl9f3mnwTW2YAo_cTyZU3k",
+        "name": "Sana Zehra",
+        "__collections__": {}
+      },
+      "taha": {
+        "description": "Taha develops leading edge digital financial services based mobile applications at TPS Pakistan. He is a technology enthusiast, has good taste in design and loves problem solving. At present he is beginning to give back to community.",
+        "photoUrl": "https://farm8.staticflickr.com/7882/46360905165_91bfebb04a_m.jpg",
+        "name": "Syed Taha Ali",
+        "__collections__": {}
+      },
+      "waheeda": {
+        "photoUrl": "https://drive.google.com/file/d/1M_tWrSGdAL9H7egFFHOHql3esEaFnZEB/view",
+        "name": "Waheeda Ghani",
+        "description": "Waheeda Ghani is part of the IT industry for more than 10 years. She has worked on Native iOS apps and some cross platform technologies including Xamarin, React Native, and Flutter. She also worked on gaming platforms like Unity 3D and Cocos2d. She is currently working at 10Pearls as a Technical Lead. ",
+        "__collections__": {}
+      },
+      "waleed": {
+        "photoUrl": "https://media.licdn.com/dms/image/C4E03AQEjyERQaPjT7g/profile-displayphoto-shrink_800_800/0?e=1557360000&v=beta&t=BRPeTP8fS9Xl7ujmiUqt9-eajcio8C0ixKo5XGTrEVs",
+        "name": "Waleed Arshad",
+        "description": "Waleed Arshad is a mobile technologist, a core developer and one of the youngest contributor to Flutter global community in Pakistan. He mainly focuses on developing cross-platform mobile applications for both iOS and Android, and is inclined towards consistently coping up with leading-edge technology orientations. He has been a part of IBM Pakistan as a Cloud Application Developer, and is currently working as a core mobile application developer at TPS Worldwide.",
+        "__collections__": {}
+      }
+    },
+    "users": {}
+  }
+}
