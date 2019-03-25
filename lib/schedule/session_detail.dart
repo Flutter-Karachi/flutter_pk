@@ -15,24 +15,17 @@ class SessionDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    var textColor = ColorDictionary.stringToColor[session.textColor];
+
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.dark,
+        iconTheme: IconThemeData(color: textColor),
         title: Text(
           session.title,
-          style: TextStyle(
-              color: ColorDictionary.stringToColor[session.textColor]),
+          style: TextStyle(color: textColor),
         ),
         backgroundColor: ColorDictionary.stringToColor[session.color],
-        leading: IconButton(
-            icon: Icon(
-              Icons.keyboard_arrow_left,
-              size: 40.0,
-            ),
-            color: ColorDictionary.stringToColor[session.textColor],
-            onPressed: () {
-              Navigator.of(context).pop();
-            }),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
