@@ -56,17 +56,9 @@ class RegistrationPageState extends State<RegistrationPage> {
                     ),
                     Text(
                       'Registration',
-                      style: Theme.of(context)
-                          .textTheme
-                          .title
-                          .copyWith(fontSize: 24.0),
+                      style: Theme.of(context).textTheme.title,
                     ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.clear,
-                        color: Colors.transparent,
-                      ),
-                    ),
+                    SizedBox(width: 48),
                   ],
                 ),
                 Expanded(
@@ -193,27 +185,29 @@ class RegistrationPageState extends State<RegistrationPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Center(
+              child: IconTheme(
+                data: IconThemeData(color: Colors.blueGrey),
                 child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Icon(
-                  Icons.work,
-                  size: 60.0,
-                  color: Theme.of(context).primaryColor,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.work,
+                      size: 48.0,
+                    ),
+                    SizedBox(width: 8),
+                    Icon(
+                      Icons.laptop_mac,
+                      size: 80.0,
+                    ),
+                    SizedBox(width: 8),
+                    Icon(
+                      Icons.school,
+                      size: 48.0,
+                    ),
+                  ],
                 ),
-                Icon(
-                  Icons.laptop_mac,
-                  size: 80.0,
-                  color: Theme.of(context).primaryColor,
-                ),
-                Icon(
-                  Icons.school,
-                  size: 60.0,
-                  color: Theme.of(context).primaryColor,
-                ),
-              ],
-            )),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(
                 top: 16.0,
@@ -241,10 +235,6 @@ class RegistrationPageState extends State<RegistrationPage> {
                         duration: Duration(milliseconds: 500),
                         curve: Curves.fastOutSlowIn);
                   },
-                  textColor: Colors.white,
-                  color: Colors.blueGrey,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0)),
                 ),
                 RaisedButton(
                   child: Text('PROFESSIONAL'),
@@ -257,10 +247,6 @@ class RegistrationPageState extends State<RegistrationPage> {
                         duration: Duration(milliseconds: 500),
                         curve: Curves.fastOutSlowIn);
                   },
-                  color: Colors.blueGrey,
-                  textColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0)),
                 ),
               ],
             ),

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/schedule/model.dart';
+import 'package:flutter_pk/theme.dart';
 import 'package:flutter_pk/widgets/full_screen_loader.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';

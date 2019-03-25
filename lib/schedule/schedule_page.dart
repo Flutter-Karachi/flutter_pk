@@ -4,6 +4,7 @@ import 'package:flutter_pk/helpers/formatters.dart';
 import 'package:flutter_pk/schedule/model.dart';
 import 'package:flutter_pk/schedule/session_detail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_pk/theme.dart';
 import 'package:flutter_pk/widgets/custom_app_bar.dart';
 
 class SchedulePage extends StatefulWidget {
@@ -17,7 +18,6 @@ class SchedulePageState extends State<SchedulePage>
     with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       body: SafeArea(
         child: Column(

@@ -36,23 +36,6 @@ abstract class FireStoreKeys {
   static const String dateReferenceString = '16032019';
 }
 
-abstract class ColorDictionary {
-  static const Map<String, Color> stringToColor = {
-    'indigo': Colors.indigo,
-    'green': Colors.green,
-    'amber': Colors.amber,
-    'blue': Colors.blue,
-    'white': Colors.white,
-    'black': Colors.black,
-    'blueGrey': Colors.blueGrey,
-    'lightBlue': Colors.lightBlue,
-    'brown': Colors.brown,
-    'teal': Colors.teal,
-    'indigoAccent': Colors.indigoAccent,
-    'grey': Colors.grey
-  };
-}
-
 final GoogleSignIn googleSignIn = GoogleSignIn();
 final FirebaseAuth auth = FirebaseAuth.instance;
 final Future<SharedPreferences> sharedPreferences =

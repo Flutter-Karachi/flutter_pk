@@ -6,6 +6,7 @@ import 'package:flutter_pk/contribution/contribution_dialog.dart';
 import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/home_master.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_pk/theme.dart';
 import 'package:flutter_pk/widgets/full_screen_loader.dart';
 import 'package:flutter_pk/widgets/sprung_box.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -25,9 +26,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Pakistan',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: theme,
       home: MyHomePage(title: 'Flutter Pakistan'),
       routes: {
         Routes.home_master: (context) => new HomePageMaster(),
@@ -87,8 +86,8 @@ class _MyHomePageState extends State<MyHomePage> {
             : new SwiperPagination(
                 margin: new EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 30.0),
                 builder: new DotSwiperPaginationBuilder(
-                    color: Colors.black26,
-                    activeColor: Colors.blue,
+                    color: Theme.of(context).hintColor,
+                    activeColor: Theme.of(context).primaryColor,
                     size: 10.0,
                     activeSize: 15.0),
               ),
@@ -131,11 +130,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 padding: const EdgeInsets.only(top: 32.0, bottom: 32.0),
                 child: RaisedButton(
                   onPressed: _handleSignIn,
-                  color: Theme.of(context).primaryColor,
                   textColor: Colors.white,
                   child: Text('Get started'),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0)),
                 ),
               )
             ],

@@ -49,7 +49,7 @@ class VenueDetailPageState extends State<VenueDetailPage> {
                 width: 40.0,
                 child: Image(
                   image: AssetImage('assets/map.png'),
-                  color: Colors.blue,
+                  color: Theme.of(context).primaryColor,
                 ),
               )),
             )
