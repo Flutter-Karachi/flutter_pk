@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_pk/util.dart';
 
 class Speaker {
   final String id;
@@ -60,8 +61,8 @@ class Session {
   Session.fromMap(Map<String, dynamic> map, {this.reference})
       : id = map['id'],
         title = map['title'],
-        endDateTime = map['endDateTime'],
-        startDateTime = map['startDateTime'],
+        endDateTime = toDateTime(map['endDateTime']),
+        startDateTime = toDateTime(map['startDateTime']),
         color = map['color'],
         textColor = map['textColor'],
         speakerId = map['speakerId'],

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/helpers/formatters.dart';
 import 'package:flutter_pk/profile/profile_dialog.dart';
+import 'package:flutter_pk/util.dart';
 
 class CustomAppBar extends StatefulWidget {
   final String title;
@@ -30,7 +31,7 @@ class CustomAppBarState extends State<CustomAppBar> {
           onValue.documents.first['date'],
           DateFormats.shortUiDateFormat,
         );
-        eventDateTimeCache.setDateTime(onValue.documents.first['date']);
+        eventDateTimeCache.setDateTime(toDateTime(onValue.documents.first['date']));
         eventTitle = onValue.documents.first['eventTitle'];
       });
     });
