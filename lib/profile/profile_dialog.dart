@@ -55,7 +55,7 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
               child: Text(
                 'SIGN OUT',
                 style: Theme.of(context).textTheme.subhead.copyWith(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).accentColor,
                     ),
               ),
               onTap: () async {

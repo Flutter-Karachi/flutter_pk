@@ -110,6 +110,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                 child: Image(
                   image: AssetImage('assets/ic_phone_setup.png'),
                   color: Theme.of(context).primaryColor,
+                  width: 120,
                 ),
               ),
             ),
