@@ -150,7 +150,7 @@ class SchedulePageState extends State<SchedulePage>
                   ),
                   onTap: () async {
                     var isDescriptionAvailable = session.description != null &&
-                        session.description.length > 0;
+                        session.description.isNotEmpty;
                     if (isDescriptionAvailable)
                       await Navigator.of(context).push(
                         MaterialPageRoute(
