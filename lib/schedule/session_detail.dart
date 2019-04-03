@@ -29,7 +29,7 @@ class SessionDetailPage extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: _buildFeedbackButton(context),
-      body: _buildBody(showSpeakerInfo: session.speakers.length > 0),
+      body: _buildBody(showSpeakerInfo: session.speakers != null && session.speakers.length > 0),
     );
   }
 
