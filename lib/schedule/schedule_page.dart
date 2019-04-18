@@ -15,10 +15,7 @@ class SchedulePage extends StatefulWidget {
 
 class SchedulePageState extends State<SchedulePage>
     with SingleTickerProviderStateMixin {
-
   ScheduleApi api = ScheduleApi();
-  List<Session> _sessions = List<Session>();
-  bool _isLoading = false;
 
   @override
   void initState() {
@@ -36,17 +33,20 @@ class SchedulePageState extends State<SchedulePage>
             CustomAppBar(
               title: 'Schedule',
             ),
-            _buildBody()
+            _buildList()
           ],
         ),
       ),
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildList() {
     return Expanded(
-      child: _isLoading
-          ? Center(
+      child: FutureBuilder<List<Session>>(
+        future: _fetchSessions(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
               child: HeartbeatProgressIndicator(
                 child: SizedBox(
                   height: 40.0,
@@ -54,18 +54,19 @@ class SchedulePageState extends State<SchedulePage>
                   child: Image(image: AssetImage('assets/loader.png')),
                 ),
               ),
-            )
-          : _buildList(),
-    );
-  }
-
-  Widget _buildList() {
-    return ListView.builder(
-      itemCount: _sessions.length,
-      itemBuilder: (BuildContext context, int index) {
-        return _buildListItem(context, _sessions[index]);
-      },
-      padding: const EdgeInsets.only(top: 20.0),
+            );
+          } else {
+            var sessions = snapshot.data;
+            return ListView.builder(
+              itemCount: sessions.length,
+              itemBuilder: (BuildContext context, int index) {
+                return _buildListItem(context, sessions[index]);
+              },
+              padding: const EdgeInsets.only(top: 20.0),
+            );
+          }
+        },
+      ),
     );
   }
 
@@ -136,7 +137,7 @@ class SchedulePageState extends State<SchedulePage>
                             ColorDictionary.stringToColor[session?.textColor],
                       ),
                     ),
-                    onTap: () => _handleListTileOnTap(session, context)),
+                    onTap: () => _handleListTileOnTap(context, session)),
               ),
             ),
           ],
@@ -151,7 +152,7 @@ class SchedulePageState extends State<SchedulePage>
   String _formatTimeDigit(int timeValue) =>
       timeValue < 10 ? '0' + timeValue.toString() : timeValue.toString();
 
-  Future _handleListTileOnTap(Session session, BuildContext context) async {
+  Future _handleListTileOnTap(BuildContext context, Session session) async {
     var isDescriptionAvailable =
         session.description != null && session.description.isNotEmpty;
     if (isDescriptionAvailable)
@@ -164,15 +165,13 @@ class SchedulePageState extends State<SchedulePage>
       );
   }
 
-  void _fetchSessions() async {
-    setState(() => _isLoading = true);
+  Future<List<Session>> _fetchSessions() async {
     try {
       var response = await api.getSessionList();
-      setState(() => _sessions = response);
+      return response;
     } catch (ex) {
       print(ex);
-    } finally {
-      setState(() => _isLoading = false);
+      return null;
     }
   }
 }
