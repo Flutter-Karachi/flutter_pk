@@ -553,7 +553,7 @@ class RegistrationPageState extends State<RegistrationPage> {
         });
       });
 
-      await userCache.getCurrentUser(userCache.user.id, useCached: false);
+      await userCache.getUser(userCache.user.id, useCached: false);
     } catch (ex) {
       print(ex);
       Alert(

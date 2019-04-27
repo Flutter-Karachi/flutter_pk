@@ -295,7 +295,7 @@ class HomePageMasterState extends State<HomePageMaster> {
       ),
     );
     var user =
-        await userCache.getCurrentUser(userCache.user.id, useCached: false);
+        await userCache.getUser(userCache.user.id, useCached: false);
     setState(() {
       _user = user;
     });
@@ -303,7 +303,7 @@ class HomePageMasterState extends State<HomePageMaster> {
   }
 
   Future _setUser(bool useCached) async {
-    var user = await userCache.getCurrentUser(
+    var user = await userCache.getUser(
       userCache.user.id,
       useCached: useCached,
     );
