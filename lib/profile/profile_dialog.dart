@@ -167,7 +167,7 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
                         fullscreenDialog: true,
                       ),
                     );
-                    var user = await userCache.getCurrentUser(
+                    var user = await userCache.getUser(
                       userCache.user.id,
                       useCached: false,
                     );
@@ -199,7 +199,7 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
   }
 
   Future _setUser() async {
-    var user = await userCache.getCurrentUser(userCache.user.id);
+    var user = await userCache.getUser(userCache.user.id);
     setState(() {
       _user = user;
     });

@@ -4,12 +4,12 @@ import 'package:flutter_pk/contribution/contribution_dialog.dart';
 import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/home_master.dart';
 import 'package:flutter_pk/main/main_model.dart';
+import 'package:flutter_pk/shared_preferences.dart';
 import 'package:flutter_pk/theme.dart';
 import 'package:flutter_pk/widgets/full_screen_loader.dart';
 import 'package:flutter_pk/widgets/sprung_box.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sprung/sprung.dart';
 
 void main() => runApp(MyApp());
@@ -46,14 +46,14 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _showSwipeText = false;
   bool _isFetchingSharedPreferences = false;
 
-  GoogleSignInApi api = GoogleSignInApi();
+  LoginApi api = LoginApi();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    api.setTimestampsSnapshots();
+    api.initialize();
 
     _getSharedPreferences();
   }
@@ -178,17 +178,16 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future _handleSignIn() async {
-
-    final SharedPreferences prefs = await sharedPreferences;
     userCache.clear();
-    prefs.clear();
+    await SharedPreferencesHandler.clearPreferences();
 
     setState(() => _isLoading = true);
 
     try {
-      String userId = await api.handleGoogleSignIn();
-      prefs.setString(SharedPreferencesKeys.firebaseUserId, userId);
-      await userCache.getCurrentUser(userId);
+      String userId = await api.initiateLogin();
+      await SharedPreferencesHandler.setPreference(
+          SharedPreferencesKeys.firebaseUserId, userId);
+      await userCache.getUser(userId);
 
       if (!userCache.user.isContributor) {
         await Navigator.of(context).push(
@@ -203,7 +202,6 @@ class _MyHomePageState extends State<MyHomePage> {
         Routes.home_master,
         ModalRoute.withName(Routes.main),
       );
-
     } catch (ex) {
       print(ex);
       Alert(
@@ -232,14 +230,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void _getSharedPreferences() async {
     setState(() => _isFetchingSharedPreferences = true);
     try {
-      final sharedPrefsFuture = sharedPreferences;
-      final waitFuture = Future.delayed(Duration(seconds: 5));
-      final results = await Future.wait([sharedPrefsFuture, waitFuture]);
-
-      final SharedPreferences prefs = results[0];//await sharedPreferences;
-      var userId = prefs.get(SharedPreferencesKeys.firebaseUserId);
+      var userId = await SharedPreferencesHandler.getValue(
+          SharedPreferencesKeys.firebaseUserId);
       if (userId != null) {
-        await userCache.getCurrentUser(userId);
+        await userCache.getUser(userId);
         await Navigator.of(context).pushNamedAndRemoveUntil(
           Routes.home_master,
           ModalRoute.withName(Routes.main),

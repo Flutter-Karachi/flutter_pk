@@ -1,23 +1,26 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_pk/caches/user.dart';
 import 'package:flutter_pk/global.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class GoogleSignInApi {
-  Future<String> handleGoogleSignIn() async {
+class LoginApi {
+  Future<String> initiateLogin() async {
+    GoogleSignInAuthentication googleAuth = await _handleGoogleSignIn();
 
-    GoogleSignInAccount googleUser = await googleSignIn.signIn();
-    GoogleSignInAuthentication googleAuth = await googleUser.authentication;
     FirebaseUser user = await auth.signInWithGoogle(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
+    await _setUserToFireStore(user);
+
+    return user.uid;
+  }
+
+  Future _setUserToFireStore(FirebaseUser user) async {
     CollectionReference reference =
-    Firestore.instance.collection(FireStoreKeys.userCollection);
+        Firestore.instance.collection(FireStoreKeys.userCollection);
 
     await reference.document(user.uid).get().then((snap) async {
       if (!snap.exists) {
@@ -28,18 +31,20 @@ class GoogleSignInApi {
             photoUrl: user.photoUrl,
             email: user.email);
 
-        await reference
-            .document(user.uid)
-            .setData(_user.toJson(), merge: true);
+        await reference.document(user.uid).setData(_user.toJson(), merge: true);
       }
     });
-    return user.uid;
   }
 
-  setTimestampsSnapshots() {
+  Future<GoogleSignInAuthentication> _handleGoogleSignIn() async {
+    GoogleSignInAccount googleUser = await googleSignIn.signIn();
+    GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    return googleAuth;
+  }
+
+  initialize() {
     Firestore.instance.settings(
-    timestampsInSnapshotsEnabled: true,
+      timestampsInSnapshotsEnabled: true,
     );
   }
-
 }

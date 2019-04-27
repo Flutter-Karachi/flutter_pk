@@ -185,7 +185,7 @@ class FullScreenContributionDialogState
           }
         });
       });
-      await userCache.getCurrentUser(userCache.user.id, useCached: false);
+      await userCache.getUser(userCache.user.id, useCached: false);
       Navigator.of(context).pop();
     } catch (ex) {
       print(ex);
