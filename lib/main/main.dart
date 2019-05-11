@@ -45,6 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _isLoading = false;
   bool _showSwipeText = false;
   bool _isFetchingSharedPreferences = false;
+  SharedPreferencesHandler preferences;
 
   LoginApi api = LoginApi();
 
@@ -54,6 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
 
     api.initialize();
+
+    preferences = SharedPreferencesHandler();
 
     _getSharedPreferences();
   }
@@ -179,13 +182,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future _handleSignIn() async {
     userCache.clear();
-    await SharedPreferencesHandler.clearPreferences();
+    await preferences.clearPreferences();
 
     setState(() => _isLoading = true);
 
     try {
       String userId = await api.initiateLogin();
-      await SharedPreferencesHandler.setPreference(
+      await preferences.setPreference(
           SharedPreferencesKeys.firebaseUserId, userId);
       await userCache.getUser(userId);
 
@@ -230,7 +233,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _getSharedPreferences() async {
     setState(() => _isFetchingSharedPreferences = true);
     try {
-      var userId = await SharedPreferencesHandler.getValue(
+      var userId = await preferences.getValue(
           SharedPreferencesKeys.firebaseUserId);
       if (userId != null) {
         await userCache.getUser(userId);

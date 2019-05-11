@@ -1,32 +1,31 @@
-
 import 'package:flutter_pk/global.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHandler {
-  static Future setPreference(String key, String value) async {
-    final sharedPrefsFuture = sharedPreferences;
-    final waitFuture = Future.delayed(Duration(seconds: 5));
-    final results = await Future.wait([sharedPrefsFuture, waitFuture]);
+  SharedPreferences _prefs;
+  Future<SharedPreferences> get prefs async {
+    if (_prefs == null) {
+      _prefs = await sharedPreferences;
+    }
 
-    final SharedPreferences prefs = results[0];
-    prefs.setString(key, value);
+    return _prefs;
   }
 
-  static Future<dynamic> getValue(String key) async {
-    final sharedPrefsFuture = sharedPreferences;
-    final waitFuture = Future.delayed(Duration(seconds: 5));
-    final results = await Future.wait([sharedPrefsFuture, waitFuture]);
-
-    final SharedPreferences prefs = results[0];
-    return prefs.get(key);
+  Future setPreference(String key, String value) async {
+    await prefs.then((item) {
+      item.setString(key, value);
+    });
   }
 
-  static Future clearPreferences() async {
-    final sharedPrefsFuture = sharedPreferences;
-    final waitFuture = Future.delayed(Duration(seconds: 5));
-    final results = await Future.wait([sharedPrefsFuture, waitFuture]);
+  Future<dynamic> getValue(String key) async {
+    return await prefs.then((item) {
+      return item.get(key);
+    });
+  }
 
-    final SharedPreferences prefs = results[0];
-    prefs.clear();
+  Future clearPreferences() async {
+    await prefs.then((item) {
+      item.clear();
+    });
   }
 }
