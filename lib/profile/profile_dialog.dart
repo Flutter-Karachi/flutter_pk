@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pk/caches/user.dart';
 import 'package:flutter_pk/contribution/contribution_dialog.dart';
 import 'package:flutter_pk/global.dart';
+import 'package:flutter_pk/shared_preferences.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,11 +17,13 @@ class FullScreenProfileDialog extends StatefulWidget {
 
 class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
   User _user = new User();
+  SharedPreferencesHandler preferences;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    preferences = SharedPreferencesHandler();
     _setUser();
   }
 
@@ -60,10 +63,9 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
               ),
               onTap: () async {
                 try {
-                  final SharedPreferences prefs = await sharedPreferences;
-                  prefs.clear();
                   await googleSignIn.signOut();
                   await auth.signOut();
+                  preferences.clearPreferences();
                   userCache.clear();
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     Routes.main,
@@ -147,14 +149,7 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-//                Padding(
-//                  padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-//                  child: Image(
-//                    image: AssetImage('assets/feature.png'),
-//                  ),
-//                ),
-              ],
+              children: <Widget>[],
             ),
           ),
           !_user.isContributor
