@@ -1,47 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_pk/contribution/contribution_dialog.dart';
-import 'package:flutter_pk/global.dart';
-import 'package:flutter_pk/home_master.dart';
-import 'package:flutter_pk/main/main_model.dart';
-import 'package:flutter_pk/shared_preferences.dart';
-import 'package:flutter_pk/theme.dart';
-import 'package:flutter_pk/widgets/full_screen_loader.dart';
-import 'package:flutter_pk/widgets/sprung_box.dart';
+import 'package:flutter_pk/helpers/shared_preferences.dart';
+import 'package:flutter_pk/home/login.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sprung/sprung.dart';
 
-void main() => runApp(MyApp());
+import '../contribution/contribution_dialog.dart';
+import '../global.dart';
+import '../widgets/full_screen_loader.dart';
+import '../widgets/sprung_box.dart';
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle.dark,
-    );
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Pakistan',
-      theme: theme,
-      home: MyHomePage(title: 'Flutter Pakistan'),
-      routes: {
-        Routes.home_master: (context) => new HomePageMaster(),
-        Routes.main: (context) => MyHomePage()
-      },
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class OnboardingPage extends StatefulWidget {
+  OnboardingPage({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _OnboardingPageState createState() => _OnboardingPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _OnboardingPageState extends State<OnboardingPage> {
   bool _isLoading = false;
   bool _showSwipeText = false;
   bool _isFetchingSharedPreferences = false;
