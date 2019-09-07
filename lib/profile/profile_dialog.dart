@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pk/caches/user.dart';
 import 'package:flutter_pk/contribution/contribution_dialog.dart';
 import 'package:flutter_pk/global.dart';
-import 'package:flutter_pk/shared_preferences.dart';
+import 'package:flutter_pk/helpers/shared_preferences.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class FullScreenProfileDialog extends StatefulWidget {
   @override
