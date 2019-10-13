@@ -5,7 +5,7 @@ class UserCache {
 
   User get user => _user;
 
-  Future<User> getCurrentUser(String id, {bool useCached = true}) async {
+  Future<User> getUser(String id, {bool useCached = true}) async {
     if (_user != null && useCached) {
       return _user;
     }

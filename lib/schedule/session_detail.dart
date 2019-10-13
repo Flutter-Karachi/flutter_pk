@@ -15,127 +15,139 @@ class SessionDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    var textColor = ColorDictionary.stringToColor[session.textColor];
+
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.dark,
+        iconTheme: IconThemeData(color: textColor),
         title: Text(
           session.title,
-          style: TextStyle(
-              color: ColorDictionary.stringToColor[session.textColor]),
+          style: TextStyle(color: textColor),
         ),
         backgroundColor: ColorDictionary.stringToColor[session.color],
-        leading: IconButton(
-            icon: Icon(
-              Icons.keyboard_arrow_left,
-              size: 40.0,
-            ),
-            color: ColorDictionary.stringToColor[session.textColor],
-            onPressed: () {
-              Navigator.of(context).pop();
-            }),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          if (DateTime.now().isAfter(
-            eventDateTimeCache.eventDateTime.add(
-              Duration(days: 1),
-            ),
-          )) {
-            _navigateToFeedback(context);
-          } else {
-            Alert(
-              context: context,
-              type: AlertType.info,
-              title: "Information!",
-              desc: "You will be able to provide feedback once the event day ends!",
-              buttons: [
-                DialogButton(
-                  child: Text("Cool!",
-                      style: Theme.of(context).textTheme.title.copyWith(
-                            color: Colors.white,
-                          )),
-                  color: Colors.green,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            ).show();
-          }
-        },
-        icon: Icon(
-          Icons.rate_review,
-          color: ColorDictionary.stringToColor[session.textColor],
-        ),
-        label: Text(
-          'Feedback',
-          style: TextStyle(
-              color: ColorDictionary.stringToColor[session.textColor]),
-        ),
-        backgroundColor: ColorDictionary.stringToColor[session.color],
+      floatingActionButton: _buildFeedbackButton(context),
+      body: _buildBody(showSpeakerInfo: session.speakers != null && session.speakers.length > 0),
+    );
+  }
+
+  FloatingActionButton _buildFeedbackButton(BuildContext context) {
+    return FloatingActionButton.extended(
+      onPressed: () {
+        if (DateTime.now().isAfter(
+          eventDateTimeCache.eventDateTime.add(
+            Duration(days: 1),
+          ),
+        )) {
+          _navigateToFeedback(context);
+        } else {
+          Alert(
+            context: context,
+            type: AlertType.info,
+            title: "Information!",
+            desc:
+                "You will be able to provide feedback once the event day ends!",
+            buttons: [
+              DialogButton(
+                child: Text("Cool!",
+                    style: Theme.of(context).textTheme.title.copyWith(
+                          color: Colors.white,
+                        )),
+                color: Colors.green,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          ).show();
+        }
+      },
+      icon: Icon(
+        Icons.rate_review,
+        color: ColorDictionary.stringToColor[session.textColor],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Column(
-            children: <Widget>[
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Center(
-                        child: Text(
-                            'About ${session.speakers.length > 1 ? 'speakers' : 'speaker'}'),
-                      ),
+      label: Text(
+        'Feedback',
+        style: TextStyle(
+            color: ColorDictionary.stringToColor[session.textColor]),
+      ),
+      backgroundColor: ColorDictionary.stringToColor[session.color],
+    );
+  }
+
+  Widget _buildBody({@required bool showSpeakerInfo}) {
+    var bodyWidgets = <Widget>[];
+
+    if (showSpeakerInfo) {
+      bodyWidgets.addAll(
+        [
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Center(
+              child: Text(
+                  'About ${session.speakers.length > 1 ? 'speakers' : 'speaker'}'),
+            ),
+          ),
+          session.speakers.length > 1
+              ? _buildMultiSpeakerDetail()
+              : _buildSingleSpeakerDetail(),
+          Divider(),
+        ],
+      );
+    }
+
+    bodyWidgets.addAll(
+      [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Container(
+            decoration: BoxDecoration(
+                color: ColorDictionary.stringToColor[session.color],
+                borderRadius: BorderRadius.circular(10.0)),
+            child: ListTile(
+              title: Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Center(
+                  child: Text(
+                    session.title,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: ColorDictionary.stringToColor[session.textColor],
                     ),
-                    session.speakers.length > 1
-                        ? _buildMultiSpeakerDetail()
-                        : _buildSingleSpeakerDetail(),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: ColorDictionary.stringToColor[session.color],
-                            borderRadius: BorderRadius.circular(10.0)),
-                        child: ListTile(
-                          title: Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Center(
-                              child: Text(
-                                session.title,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: ColorDictionary
-                                      .stringToColor[session.textColor],
-                                ),
-                              ),
-                            ),
-                          ),
-                          subtitle: Padding(
-                            padding:
-                                const EdgeInsets.only(top: 16.0, bottom: 8.0),
-                            child: Text(
-                              session.description,
-                              style: TextStyle(
-                                  color: ColorDictionary
-                                      .stringToColor[session.textColor]),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 60.0,
-                    )
-                  ],
+                  ),
                 ),
               ),
-            ],
+              subtitle: Padding(
+                padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+                child: Text(
+                  session.description,
+                  style: TextStyle(
+                      color: ColorDictionary.stringToColor[session.textColor]),
+                ),
+              ),
+            ),
           ),
+        ),
+        SizedBox(
+          height: 60.0,
+        ),
+      ],
+    );
+
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Column(
+          children: <Widget>[
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: bodyWidgets,
+              ),
+            ),
+          ],
         ),
       ),
     );

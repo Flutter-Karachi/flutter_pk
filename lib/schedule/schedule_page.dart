@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_pk/global.dart';
 import 'package:flutter_pk/helpers/formatters.dart';
 import 'package:flutter_pk/schedule/model.dart';
 import 'package:flutter_pk/schedule/session_detail.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_pk/theme.dart';
 import 'package:flutter_pk/widgets/custom_app_bar.dart';
+import 'package:progress_indicators/progress_indicators.dart';
 
 class SchedulePage extends StatefulWidget {
   @override
@@ -16,6 +15,15 @@ class SchedulePage extends StatefulWidget {
 
 class SchedulePageState extends State<SchedulePage>
     with SingleTickerProviderStateMixin {
+  ScheduleApi api = ScheduleApi();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchSessions();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,64 +33,44 @@ class SchedulePageState extends State<SchedulePage>
             CustomAppBar(
               title: 'Schedule',
             ),
-            _buildBody()
+            _buildList()
           ],
         ),
       ),
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildList() {
     return Expanded(
-      child: _streamBuilder(FireStoreKeys.sessionCollection),
-    );
-  }
-
-  StreamBuilder<QuerySnapshot> _streamBuilder(String parameter) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance
-          .collection(FireStoreKeys.dateCollection)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData)
-          return Center(
-            child: Text(
-              'Nothing found!',
-              style: Theme.of(context).textTheme.title.copyWith(
-                    color: Colors.black26,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          );
-        return _getCollection(
-            context, snapshot.data.documents?.first, parameter);
-      },
-    );
-  }
-
-  Widget _getCollection(
-      BuildContext context, DocumentSnapshot snapshot, String parameter) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: snapshot.reference
-            .collection(parameter)
-            .orderBy('startDateTime')
-            .snapshots(),
+      child: FutureBuilder<List<Session>>(
+        future: _fetchSessions(),
         builder: (context, snapshot) {
-          return _buildList(context, snapshot.data?.documents);
-        });
-  }
-
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    if (snapshot == null) return Container();
-    if (snapshot.length < 1) return Container();
-    return ListView(
-      padding: const EdgeInsets.only(top: 20.0),
-      children: snapshot.map((data) => _buildListItem(context, data)).toList(),
+          if (!snapshot.hasData) {
+            return Center(
+              child: HeartbeatProgressIndicator(
+                child: SizedBox(
+                  height: 40.0,
+                  width: 40.0,
+                  child: Image(image: AssetImage('assets/loader.png')),
+                ),
+              ),
+            );
+          } else {
+            var sessions = snapshot.data;
+            return ListView.builder(
+              itemCount: sessions.length,
+              itemBuilder: (BuildContext context, int index) {
+                return _buildListItem(context, sessions[index]);
+              },
+              padding: const EdgeInsets.only(top: 20.0),
+            );
+          }
+        },
+      ),
     );
   }
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-    final session = Session.fromSnapshot(data);
+  Widget _buildListItem(BuildContext context, Session session) {
     var hour = session.startDateTime?.hour;
     var minute = session.startDateTime?.minute;
 
@@ -106,7 +94,7 @@ class SchedulePageState extends State<SchedulePage>
               child: Column(
                 children: <Widget>[
                   Text(
-                    '${hour < 10 ? '0' + hour.toString() : hour.toString()}:${minute < 10 ? '0' + minute.toString() : minute.toString()}',
+                    '${_formatTimeDigit(hour)}:${_formatTimeDigit(minute)}',
                     style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold),
@@ -130,35 +118,26 @@ class SchedulePageState extends State<SchedulePage>
                   ),
                 ),
                 child: ListTile(
-                  title: Text(
-                    session.title,
-                    style: TextStyle(
-                        color:
-                            ColorDictionary.stringToColor[session?.textColor]),
-                  ),
-                  subtitle: Text(
-                    '${formatDate(
-                      session?.startDateTime,
-                      DateFormats.shortUiDateTimeFormat,
-                    )} - ${formatDate(
-                      session?.endDateTime,
-                      DateFormats.shortUiTimeFormat,
-                    )}',
-                    style: TextStyle(
-                      color: ColorDictionary.stringToColor[session?.textColor],
+                    title: Text(
+                      session.title,
+                      style: TextStyle(
+                          color: ColorDictionary
+                              .stringToColor[session?.textColor]),
                     ),
-                  ),
-                  onTap: () async {
-                    if (session.id != GlobalConstants.breakId)
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => SessionDetailPage(
-                                session: session,
-                              ),
-                        ),
-                      );
-                  },
-                ),
+                    subtitle: Text(
+                      '${formatDate(
+                        session?.startDateTime,
+                        DateFormats.shortUiDateTimeFormat,
+                      )} - ${formatDate(
+                        session?.endDateTime,
+                        DateFormats.shortUiTimeFormat,
+                      )}',
+                      style: TextStyle(
+                        color:
+                            ColorDictionary.stringToColor[session?.textColor],
+                      ),
+                    ),
+                    onTap: () => _handleListTileOnTap(context, session)),
               ),
             ),
           ],
@@ -168,5 +147,31 @@ class SchedulePageState extends State<SchedulePage>
         ),
       ],
     );
+  }
+
+  String _formatTimeDigit(int timeValue) =>
+      timeValue < 10 ? '0' + timeValue.toString() : timeValue.toString();
+
+  Future _handleListTileOnTap(BuildContext context, Session session) async {
+    var isDescriptionAvailable =
+        session.description != null && session.description.isNotEmpty;
+    if (isDescriptionAvailable)
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => SessionDetailPage(
+                session: session,
+              ),
+        ),
+      );
+  }
+
+  Future<List<Session>> _fetchSessions() async {
+    try {
+      var response = await api.getSessionList();
+      return response;
+    } catch (ex) {
+      print(ex);
+      return null;
+    }
   }
 }

@@ -110,6 +110,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                 child: Image(
                   image: AssetImage('assets/ic_phone_setup.png'),
                   color: Theme.of(context).primaryColor,
+                  width: 120,
                 ),
               ),
             ),
@@ -552,7 +553,7 @@ class RegistrationPageState extends State<RegistrationPage> {
         });
       });
 
-      await userCache.getCurrentUser(userCache.user.id, useCached: false);
+      await userCache.getUser(userCache.user.id, useCached: false);
     } catch (ex) {
       print(ex);
       Alert(
