@@ -33,6 +33,19 @@ $ firestore-import -a firebase-credentials.json -b firebase-export.json
 ```
 5. After this command is executed successfully, go to your Database section of your Firebase console to make sure that the data is created there.
 
+### Exporting Firebase data
+You can also export Firestore data using the following command:
+```
+$ firestore-export -a firebase-credentials.json -b firebase-export.json -p
+```
+This will export the data into `firebase-export.json` file. 
+
+One common use case is to get all users and export them to CSV. There's a Dart script included in the `data` folder and it can be used as shown below:
+```
+$ dart convert.dart firebase-export.json
+```
+This will create an `export.csv` in the same folder which you can then use with Microsoft Excel, Google Sheets etc.
+
 # Getting started with Flutter
 A few resources to get you started if this is your first Flutter project:
 
