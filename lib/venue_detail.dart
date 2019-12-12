@@ -16,6 +16,7 @@ class VenueDetailPageState extends State<VenueDetailPage> {
   GoogleMapController mapController;
   bool _isLoading = false;
   Venue _venue = new Venue();
+  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -62,6 +63,7 @@ class VenueDetailPageState extends State<VenueDetailPage> {
                   compassEnabled: true,
                   rotateGesturesEnabled: true,
                   scrollGesturesEnabled: true,
+                  markers: Set<Marker>.of(markers.values),
                   initialCameraPosition: CameraPosition(
                       target: LatLng(
                         _venue.location.latitude,
@@ -145,14 +147,25 @@ class VenueDetailPageState extends State<VenueDetailPage> {
   }
 
   void _addMarker(Venue venue) {
-    mapController.addMarker(
-      MarkerOptions(
-        position: LatLng(venue.location.latitude, venue.location.longitude),
-        infoWindowText: InfoWindowText(venue.title, venue.city),
-        icon: BitmapDescriptor.defaultMarkerWithHue(
-          BitmapDescriptor.hueAzure,
-        ),
+    final int markerCount = markers.length;
+
+    if (markerCount == 12) {
+      return;
+    }
+
+    final MarkerId markerId = MarkerId(venue.city);
+
+    final Marker marker = Marker(
+      markerId: markerId,
+      position: LatLng(venue.location.latitude, venue.location.longitude),
+      infoWindow: InfoWindow(title: venue.title, snippet: venue.city),
+      icon: BitmapDescriptor.defaultMarkerWithHue(
+        BitmapDescriptor.hueAzure,
       ),
     );
+
+    setState(() {
+      markers[markerId] = marker;
+    });
   }
 }
