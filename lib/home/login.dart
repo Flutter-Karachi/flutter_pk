@@ -8,10 +8,18 @@ class LoginApi {
   Future<String> initiateLogin() async {
     GoogleSignInAuthentication googleAuth = await _handleGoogleSignIn();
 
-    FirebaseUser user = await auth.signInWithGoogle(
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
+
+    final AuthResult authResult = await auth.signInWithCredential(credential);
+    final FirebaseUser user = authResult.user;
+
+//    FirebaseUser user = await auth.signInWithGoogle(
+//      accessToken: googleAuth.accessToken,
+//      idToken: googleAuth.idToken,
+//    );
 
     await _setUserToFireStore(user);
 
@@ -44,7 +52,7 @@ class LoginApi {
 
   initialize() {
     Firestore.instance.settings(
-      timestampsInSnapshotsEnabled: true,
+//      timestampsInSnapshotsEnabled: true,
     );
   }
 }
