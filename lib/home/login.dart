@@ -52,6 +52,7 @@ class LoginApi {
 
   initialize() {
     Firestore.instance.settings(
+      // TODO: Update this according to the new implementation
 //      timestampsInSnapshotsEnabled: true,
     );
   }
