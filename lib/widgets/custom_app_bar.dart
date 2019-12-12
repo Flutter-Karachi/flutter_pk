@@ -59,18 +59,20 @@ class CustomAppBarState extends State<CustomAppBar> {
                   backgroundImage: NetworkImage(userCache.user.photoUrl)),
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                eventTitle,
-                style: Theme.of(context).textTheme.title,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.clip,
-              ),
-              Text(eventDate)
-            ],
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  eventTitle,
+                  style: Theme.of(context).textTheme.title,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.clip,
+                ),
+                Text(eventDate)
+              ],
+            ),
           ),
           SizedBox(width: 48),
         ],
