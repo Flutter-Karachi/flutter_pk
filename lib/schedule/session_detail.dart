@@ -1,23 +1,47 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pk/feedback/feedback.dart';
 import 'package:flutter_pk/global.dart';
+import 'package:flutter_pk/helpers/notifications.dart';
 import 'package:flutter_pk/schedule/model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_pk/theme.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class SessionDetailPage extends StatelessWidget {
+class SessionDetailPage extends StatefulWidget {
+
   final Session session;
   SessionDetailPage({@required this.session});
 
   @override
+  State<StatefulWidget> createState() {
+    return _SessionDetailPage(session);
+  }
+
+}
+
+class _SessionDetailPage extends State<SessionDetailPage>{
+
+final Session session;
+
+LocalNotifications localNotifications = LocalNotifications();
+
+_SessionDetailPage(this.session);
+
+@override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    
     var textColor = ColorDictionary.stringToColor[session.textColor];
+    final _scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         brightness: Brightness.dark,
         iconTheme: IconThemeData(color: textColor),
@@ -25,6 +49,21 @@ class SessionDetailPage extends StatelessWidget {
           session.title,
           style: TextStyle(color: textColor),
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.notifications),
+            onPressed: (){
+              var diff = session.startDateTime.difference(DateTime.now());
+              print(diff.inMinutes);
+              print("in seconds");
+              print(diff.inSeconds);
+              localNotifications.scheduleNotification(diff.inMinutes,session.title);
+              _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text("You will get notification when the session starts"),
+    ));
+            },
+          )
+        ],
         backgroundColor: ColorDictionary.stringToColor[session.color],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
