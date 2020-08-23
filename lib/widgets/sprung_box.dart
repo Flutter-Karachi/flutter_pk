@@ -4,12 +4,10 @@ import 'package:sprung/sprung.dart';
 typedef void BoolCallback(bool val);
 
 class SprungBox extends StatefulWidget {
-  final Damped damped;
   final Duration duration;
   final BoolCallback callback;
 
   SprungBox({
-    this.damped = Damped.critically,
     this.callback,
     duration,
   }) : this.duration = duration ?? Duration(milliseconds: 3500);
@@ -55,7 +53,7 @@ class _SprungBoxState extends State<SprungBox>
           padding: const EdgeInsets.only(right: 48.0),
           child: AnimatedContainer(
             duration: this.widget.duration,
-            curve: Sprung(damped: this.widget.damped),
+            curve: Sprung(),
             margin: EdgeInsets.only(
               left: left,
             ),

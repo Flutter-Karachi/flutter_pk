@@ -274,7 +274,7 @@ class SessionDetailPage extends StatelessWidget {
 
   Future<Speaker> _getData() async {
     CollectionReference reference =
-        await Firestore.instance.collection(FireStoreKeys.speakerCollection);
+        await FirebaseFirestore.instance.collection(FireStoreKeys.speakerCollection);
     var speaker =
         Speaker.fromSnapshot(await reference.document(session.speakerId).get());
     return speaker;
@@ -282,7 +282,7 @@ class SessionDetailPage extends StatelessWidget {
 
   Future<List<Speaker>> _getMultiSpeakerData() async {
     CollectionReference reference =
-        await Firestore.instance.collection(FireStoreKeys.speakerCollection);
+        await FirebaseFirestore.instance.collection(FireStoreKeys.speakerCollection);
     var speakerOne = Speaker.fromSnapshot(
         await reference.document(session.speakers[0]).get());
     var speakerTwo = Speaker.fromSnapshot(
