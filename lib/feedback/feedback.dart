@@ -156,12 +156,14 @@ class FullScreenFeedbackDialogState extends State<FullScreenFeedbackDialog> {
     setState(() => _isLoading = true);
     try {
       CollectionReference reference =
-          Firestore.instance.collection(FireStoreKeys.userCollection);
-      await reference.document(userCache.user.id).setData(
+          FirebaseFirestore.instance.collection(FireStoreKeys.userCollection);
+      await reference.doc(userCache.user.id).setData(
         {
           'feedback': {widget.session.id: rating}
         },
-        merge: true,
+        SetOptions(
+          merge: true
+        )
       );
       Alert(
         context: context,

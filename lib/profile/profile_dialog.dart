@@ -15,7 +15,7 @@ class FullScreenProfileDialog extends StatefulWidget {
 }
 
 class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
-  User _user = new User();
+  InAppUser _user = new InAppUser();
   SharedPreferencesHandler preferences;
 
   @override

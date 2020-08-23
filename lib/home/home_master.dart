@@ -26,7 +26,7 @@ class HomePageMasterState extends State<HomePageMaster> {
   IconData floatingButtonIcon = Icons.group_work;
   bool _isLoading = false;
   bool _isUserPresent = false;
-  User _user = new User();
+  InAppUser _user = new InAppUser();
   List<Widget> widgets = <Widget>[
     SchedulePage(),
     Center(
@@ -183,9 +183,9 @@ class HomePageMasterState extends State<HomePageMaster> {
 
   Future<String> _scanQr() async {
     try {
-      String qrDataString = await BarcodeScanner.scan();
-      print(qrDataString);
-      if (qrDataString == GlobalConstants.qrKey) {
+      var qrDataString = await BarcodeScanner.scan();
+      print(qrDataString.rawContent);
+      if (qrDataString.rawContent == GlobalConstants.qrKey) {
         setState(() {
           _isLoading = true;
         });
@@ -202,22 +202,22 @@ class HomePageMasterState extends State<HomePageMaster> {
             .document(FireStoreKeys.dateReferenceString)
             .get()
             .then((onValue) {
-          attendanceCount = onValue['attendanceCount'];
+          attendanceCount = onValue.data()['attendanceCount'];
         });
 
-        await attendanceReference
-            .setData({'attendanceCount': attendanceCount + 1}, merge: true);
+        await attendanceReference.set(
+            {'attendanceCount': attendanceCount + 1}, SetOptions(merge: true));
 
-        await attendeeCollectionReference.document(userCache.user.id).setData(
+        await attendeeCollectionReference.doc(userCache.user.id).set(
           {'userName': userCache.user.name},
-          merge: true,
+          SetOptions(merge: true),
         );
         CollectionReference reference =
             Firestore.instance.collection(FireStoreKeys.userCollection);
 
         await reference
-            .document(userCache.user.id)
-            .setData({"isPresent": true}, merge: true);
+            .doc(userCache.user.id)
+            .set({"isPresent": true}, SetOptions(merge: true));
         _setUser(true);
         Alert(
           context: context,
@@ -294,8 +294,7 @@ class HomePageMasterState extends State<HomePageMaster> {
         fullscreenDialog: true,
       ),
     );
-    var user =
-        await userCache.getUser(userCache.user.id, useCached: false);
+    var user = await userCache.getUser(userCache.user.id, useCached: false);
     setState(() {
       _user = user;
     });

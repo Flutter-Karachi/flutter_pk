@@ -31,8 +31,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
     // TODO: implement initState
     super.initState();
 
-    api.initialize();
-
     preferences = SharedPreferencesHandler();
 
     _getSharedPreferences();
@@ -125,7 +123,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           SprungBox(
-            damped: Damped.critically,
             callback: (bool value) {},
           ),
           Column(

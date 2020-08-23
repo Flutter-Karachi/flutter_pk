@@ -1,23 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserCache {
-  User _user;
+  InAppUser _user;
 
-  User get user => _user;
+  InAppUser get user => _user;
 
-  Future<User> getUser(String id, {bool useCached = true}) async {
+  Future<InAppUser> getUser(String id, {bool useCached = true}) async {
     if (_user != null && useCached) {
       return _user;
     }
-    _user = User.fromSnapshot(
-        await Firestore.instance.collection('users').document(id).get());
+    _user = InAppUser.fromSnapshot(
+        await FirebaseFirestore.instance.collection('users').document(id).get());
     return _user;
   }
 
   void clear() => _user = null;
 }
 
-class User {
+class InAppUser {
   final String id;
   final String name;
   final String email;
@@ -30,7 +30,7 @@ class User {
 
   Contribution contribution;
 
-  User({
+  InAppUser({
     this.name,
     this.id,
     this.email,
@@ -42,7 +42,7 @@ class User {
     this.mobileNumber,
   });
 
-  User.fromMap(Map<String, dynamic> map, {this.reference})
+  InAppUser.fromMap(Map<String, dynamic> map, {this.reference})
       : id = map['id'],
         name = map['name'],
         email = map['email'],
@@ -65,8 +65,8 @@ class User {
         "isContributor": isContributor
       };
 
-  User.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, reference: snapshot.reference);
+  InAppUser.fromSnapshot(DocumentSnapshot snapshot)
+      : this.fromMap(snapshot.data(), reference: snapshot.reference);
 }
 
 class Contribution {

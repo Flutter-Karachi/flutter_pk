@@ -6,40 +6,48 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginApi {
   Future<String> initiateLogin() async {
-    GoogleSignInAuthentication googleAuth = await _handleGoogleSignIn();
+    var user = await signInWithGoogle();
 
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
+    await _setUserToFireStore(user.user);
+
+    return user.user.uid;
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+
+    // Trigger the authentication flow
+    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    // Create a new credential
+    final GoogleAuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
-    final AuthResult authResult = await auth.signInWithCredential(credential);
-    final FirebaseUser user = authResult.user;
-
-//    FirebaseUser user = await auth.signInWithGoogle(
-//      accessToken: googleAuth.accessToken,
-//      idToken: googleAuth.idToken,
-//    );
-
-    await _setUserToFireStore(user);
-
-    return user.uid;
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
-  Future _setUserToFireStore(FirebaseUser user) async {
+  Future _setUserToFireStore(User user) async {
     CollectionReference reference =
-        Firestore.instance.collection(FireStoreKeys.userCollection);
+    FirebaseFirestore.instance.collection(FireStoreKeys.userCollection);
 
-    await reference.document(user.uid).get().then((snap) async {
+    await reference.doc(user.uid).get().then((snap) async {
       if (!snap.exists) {
-        User _user = User(
+        InAppUser _user = InAppUser(
             name: user.displayName,
             mobileNumber: user.phoneNumber,
             id: user.uid,
             photoUrl: user.photoUrl,
             email: user.email);
 
-        await reference.document(user.uid).setData(_user.toJson(), merge: true);
+        await reference
+            .doc(user.uid)
+            .set(_user.toJson(), SetOptions(merge: true));
       }
     });
   }
@@ -50,10 +58,10 @@ class LoginApi {
     return googleAuth;
   }
 
-  initialize() {
-    Firestore.instance.settings(
-      // TODO: Update this according to the new implementation
-//      timestampsInSnapshotsEnabled: true,
-    );
-  }
+//  initialize() {
+//    Firestore.instance.settings(
+//        // TODO: Update this according to the new implementation
+////      timestampsInSnapshotsEnabled: true,
+//        );
+//  }
 }

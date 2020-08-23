@@ -541,7 +541,7 @@ class RegistrationPageState extends State<RegistrationPage> {
   Future _submitDataToFirestore() async {
     setState(() => _isLoading = true);
     try {
-      Firestore.instance.runTransaction((transaction) async {
+      FirebaseFirestore.instance.runTransaction((transaction) async {
         await transaction.update(userCache.user.reference, {
           'registration': Registration(
             occupation: _isStudent ? 'Student' : 'Professional',
@@ -606,5 +606,5 @@ class Registration {
       };
 
   Registration.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, reference: snapshot.reference);
+      : this.fromMap(snapshot.data(), reference: snapshot.reference);
 }

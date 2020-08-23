@@ -117,26 +117,26 @@ class VenueDetailPageState extends State<VenueDetailPage> {
       _isLoading = true;
     });
     EventDetails _eventDetails = new EventDetails();
-    var eventDetails = Firestore.instance
+    var eventDetails = FirebaseFirestore.instance
         .collection(FireStoreKeys.dateCollection)
         .snapshots()
         .first;
     eventDetails.then((onValue) {
       locationCache.setLocation(
-        onValue.documents.first['venue']['location']['longitude'].toString(),
-        onValue.documents.first['venue']['location']['latitude'].toString(),
+        onValue.docs.first.data()['venue']['location']['longitude'].toString(),
+        onValue.docs.first.data()['venue']['location']['latitude'].toString(),
       );
       _eventDetails = EventDetails(
-          reference: onValue.documents.first.reference,
+          reference: onValue.docs.first.reference,
           venue: Venue(
-              address: onValue.documents.first['venue']['address'],
-              title: onValue.documents.first['venue']['title'],
-              city: onValue.documents.first['venue']['city'],
-              imageUrl: onValue.documents.first['venue']['imageUrl'],
+              address: onValue.docs.first.data()['venue']['address'],
+              title: onValue.docs.first.data()['venue']['title'],
+              city: onValue.docs.first.data()['venue']['city'],
+              imageUrl: onValue.docs.first.data()['venue']['imageUrl'],
               location: Location(
-                latitude: onValue.documents.first['venue']['location']
+                latitude: onValue.docs.first.data()['venue']['location']
                     ['latitude'],
-                longitude: onValue.documents.first['venue']['location']
+                longitude: onValue.docs.first.data()['venue']['location']
                     ['longitude'],
               )));
       setState(() {

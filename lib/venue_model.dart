@@ -17,7 +17,7 @@ class EventDetails {
         ),
         venue = Venue.fromMap(map['venue']);
   EventDetails.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, reference: snapshot.reference);
+      : this.fromMap(snapshot.data(), reference: snapshot.reference);
 }
 
 class Venue {
@@ -45,7 +45,7 @@ class Venue {
         location = Location.fromMap(map['location']);
 
   Venue.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, reference: snapshot.reference);
+      : this.fromMap(snapshot.data(), reference: snapshot.reference);
 }
 
 class Location {
@@ -64,5 +64,5 @@ class Location {
         longitude = map['longitude'];
 
   Location.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, reference: snapshot.reference);
+      : this.fromMap(snapshot.data(), reference: snapshot.reference);
 }
