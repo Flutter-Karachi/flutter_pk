@@ -21,11 +21,11 @@ class ScheduleApi {
 }
 
 class Speaker {
-  final String id;
-  final String name;
-  final String photoUrl;
-  final String description;
-  final DocumentReference reference;
+  final String? id;
+  final String? name;
+  final String? photoUrl;
+  final String? description;
+  final DocumentReference? reference;
 
   Speaker({
     this.name,
@@ -49,20 +49,20 @@ class Speaker {
       };
 
   Speaker.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data(), reference: snapshot.reference);
+      : this.fromMap(snapshot.data()!, reference: snapshot.reference);
 }
 
 class Session {
-  final String id;
-  final String title;
-  final DateTime startDateTime;
-  final DateTime endDateTime;
-  final String color;
-  final String textColor;
-  final String description;
-  final String speakerId;
-  final List speakers;
-  final DocumentReference reference;
+  final String? id;
+  final String? title;
+  final DateTime? startDateTime;
+  final DateTime? endDateTime;
+  final String? color;
+  final String? textColor;
+  final String? description;
+  final String? speakerId;
+  final List? speakers;
+  final DocumentReference? reference;
 
   Session(
       {this.id,
@@ -88,5 +88,5 @@ class Session {
         description = map['description'];
 
   Session.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data(), reference: snapshot.reference);
+      : this.fromMap(snapshot.data()!, reference: snapshot.reference);
 }

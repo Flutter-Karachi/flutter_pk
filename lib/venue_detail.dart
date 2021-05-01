@@ -13,9 +13,9 @@ class VenueDetailPage extends StatefulWidget {
 }
 
 class VenueDetailPageState extends State<VenueDetailPage> {
-  GoogleMapController mapController;
+  GoogleMapController? mapController;
   bool _isLoading = false;
-  Venue _venue = new Venue();
+  Venue? _venue = new Venue();
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 
   void _onMapCreated(GoogleMapController controller) {
@@ -66,8 +66,8 @@ class VenueDetailPageState extends State<VenueDetailPage> {
                   markers: Set<Marker>.of(markers.values),
                   initialCameraPosition: CameraPosition(
                       target: LatLng(
-                        _venue.location.latitude,
-                        _venue.location.longitude,
+                        _venue!.location!.latitude!,
+                        _venue!.location!.longitude!,
                       ),
                       zoom: 15.0),
                 ),
@@ -87,7 +87,7 @@ class VenueDetailPageState extends State<VenueDetailPage> {
                                       left: 64.0, right: 64.0, top: 16.0),
                                   child: Image(
                                     image: NetworkImage(
-                                      _venue.imageUrl,
+                                      _venue!.imageUrl!,
                                       scale: 0.5,
                                     ),
                                   ),
@@ -95,7 +95,7 @@ class VenueDetailPageState extends State<VenueDetailPage> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    _venue.address,
+                                    _venue!.address!,
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -146,18 +146,18 @@ class VenueDetailPageState extends State<VenueDetailPage> {
     });
   }
 
-  void _addMarker(Venue venue) {
+  void _addMarker(Venue? venue) {
     final int markerCount = markers.length;
 
     if (markerCount == 12) {
       return;
     }
 
-    final MarkerId markerId = MarkerId(venue.city);
+    final MarkerId markerId = MarkerId(venue!.city!);
 
     final Marker marker = Marker(
       markerId: markerId,
-      position: LatLng(venue.location.latitude, venue.location.longitude),
+      position: LatLng(venue.location!.latitude!, venue.location!.longitude!),
       infoWindow: InfoWindow(title: venue.title, snippet: venue.city),
       icon: BitmapDescriptor.defaultMarkerWithHue(
         BitmapDescriptor.hueAzure,

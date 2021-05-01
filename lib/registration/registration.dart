@@ -31,9 +31,9 @@ class RegistrationPageState extends State<RegistrationPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    mobileNumberController.text = userCache.user.mobileNumber == null
+    mobileNumberController.text = userCache.user!.mobileNumber == null
         ? '+92'
-        : userCache.user.mobileNumber;
+        : userCache.user!.mobileNumber!;
   }
 
   @override
@@ -65,7 +65,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                   child: PageView(
                     controller: controller,
                     children: <Widget>[
-                      userCache.user.mobileNumber == null
+                      userCache.user!.mobileNumber == null
                           ? _buildNumberSetupView(
                               context,
                               GlobalConstants.addNumberDisplayText,
@@ -134,7 +134,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                   focusNode: focusNode,
                   controller: mobileNumberController,
                   maxLength: GlobalConstants.phoneNumberMaxLength,
-                  validator: (value) => _validatePhoneNumber(value),
+                  validator: (value) => _validatePhoneNumber(value!),
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -161,7 +161,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                     ),
                     textColor: Theme.of(context).primaryColor,
                     onPressed: () {
-                      if (_mobileNumberFormKey.currentState.validate()) {
+                      if (_mobileNumberFormKey.currentState!.validate()) {
                         focusNode.unfocus();
                         controller.animateToPage(1,
                             duration: Duration(milliseconds: 500),
@@ -315,7 +315,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                   controller: studentProfessionalController,
                   maxLength: GlobalConstants.entryMaxLength,
                   validator: (value) =>
-                      _validateStudentProfessionalEntry(value),
+                      _validateStudentProfessionalEntry(value!),
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0)),
@@ -363,7 +363,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                     textColor: Theme.of(context).primaryColor,
                     onPressed: () async {
                       focusNode.unfocus();
-                      if (_studentProfessionalFormKey.currentState.validate()) {
+                      if (_studentProfessionalFormKey.currentState!.validate()) {
                         if (_isStudent) {
                           await _submitDataToFirestore();
                           Alert(
@@ -377,7 +377,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                                 child: Text("COOL!",
                                     style: Theme.of(context)
                                         .textTheme
-                                        .title
+                                        .title!
                                         .copyWith(
                                           color: Colors.white,
                                         )),
@@ -437,7 +437,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                   focusNode: focusNode,
                   controller: designationController,
                   maxLength: GlobalConstants.entryMaxLength,
-                  validator: (value) => _validateDesignation(value),
+                  validator: (value) => _validateDesignation(value!),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0)),
@@ -485,7 +485,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                     textColor: Theme.of(context).primaryColor,
                     onPressed: () async {
                       focusNode.unfocus();
-                      if (_designationFormKey.currentState.validate()) {
+                      if (_designationFormKey.currentState!.validate()) {
                         await _submitDataToFirestore();
                         Alert(
                           context: context,
@@ -498,7 +498,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                               child: Text("COOL!",
                                   style: Theme.of(context)
                                       .textTheme
-                                      .title
+                                      .title!
                                       .copyWith(
                                         color: Colors.white,
                                       )),
@@ -521,18 +521,19 @@ class RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  String _validatePhoneNumber(String number) {
+  String? _validatePhoneNumber(String number) {
     if (number.isEmpty) return 'Phone number required';
     if (number.length < GlobalConstants.phoneNumberMaxLength ||
         !RegexHelpers.phoneNumberRegex.hasMatch(number))
       return 'You wouldn\'t want to miss any important update! \nPlease enter a valid mobile number';
   }
 
-  String _validateDesignation(String number) {
+  String? _validateDesignation(String number) {
     if (number.isEmpty) return 'Designation required';
+    return null;
   }
 
-  String _validateStudentProfessionalEntry(String number) {
+  String? _validateStudentProfessionalEntry(String number) {
     if (number.isEmpty)
       return '${_isStudent ? 'Institute' : 'Workplace'} required';
     return null;
@@ -542,7 +543,7 @@ class RegistrationPageState extends State<RegistrationPage> {
     setState(() => _isLoading = true);
     try {
       FirebaseFirestore.instance.runTransaction((transaction) async {
-        await transaction.update(userCache.user.reference, {
+        await transaction.update(userCache.user!.reference!, {
           'registration': Registration(
             occupation: _isStudent ? 'Student' : 'Professional',
             workOrInstitute: studentProfessionalController.text,
@@ -553,7 +554,7 @@ class RegistrationPageState extends State<RegistrationPage> {
         });
       });
 
-      await userCache.getUser(userCache.user.id, useCached: false);
+      await userCache.getUser(userCache.user!.id, useCached: false);
     } catch (ex) {
       print(ex);
       Alert(
@@ -564,7 +565,7 @@ class RegistrationPageState extends State<RegistrationPage> {
         buttons: [
           DialogButton(
             child: Text("Dismiss",
-                style: Theme.of(context).textTheme.title.copyWith(
+                style: Theme.of(context).textTheme.title!.copyWith(
                       color: Colors.white,
                     )),
             color: Colors.red,
@@ -582,10 +583,10 @@ class RegistrationPageState extends State<RegistrationPage> {
 }
 
 class Registration {
-  final String occupation;
-  final String workOrInstitute;
-  final String designation;
-  final DocumentReference reference;
+  final String? occupation;
+  final String? workOrInstitute;
+  final String? designation;
+  final DocumentReference? reference;
 
   Registration({
     this.occupation,
@@ -606,5 +607,5 @@ class Registration {
       };
 
   Registration.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data(), reference: snapshot.reference);
+      : this.fromMap(snapshot.data()!, reference: snapshot.reference);
 }

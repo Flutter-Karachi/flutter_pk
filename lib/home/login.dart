@@ -8,15 +8,15 @@ class LoginApi {
   Future<String> initiateLogin() async {
     var user = await signInWithGoogle();
 
-    await _setUserToFireStore(user.user);
+    await _setUserToFireStore(user.user!);
 
-    return user.user.uid;
+    return user.user!.uid;
   }
 
   Future<UserCredential> signInWithGoogle() async {
 
     // Trigger the authentication flow
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAccount googleUser = await (GoogleSignIn().signIn() as Future<GoogleSignInAccount>);
 
     // Obtain the auth details from the request
     final GoogleSignInAuthentication googleAuth =
@@ -26,7 +26,7 @@ class LoginApi {
     final GoogleAuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
-    );
+    ) as GoogleAuthCredential;
 
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
@@ -42,7 +42,7 @@ class LoginApi {
             name: user.displayName,
             mobileNumber: user.phoneNumber,
             id: user.uid,
-            photoUrl: user.photoUrl,
+            photoUrl: user.photoURL,
             email: user.email);
 
         await reference
@@ -53,7 +53,7 @@ class LoginApi {
   }
 
   Future<GoogleSignInAuthentication> _handleGoogleSignIn() async {
-    GoogleSignInAccount googleUser = await googleSignIn.signIn();
+    GoogleSignInAccount googleUser = await (googleSignIn.signIn() as Future<GoogleSignInAccount>);
     GoogleSignInAuthentication googleAuth = await googleUser.authentication;
     return googleAuth;
   }

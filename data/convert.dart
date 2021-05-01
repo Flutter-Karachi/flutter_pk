@@ -12,17 +12,17 @@ void main(List<String> args) {
   var lines = <String>[];
   lines.add(
       'name,email,phone,is_present,is_registered,designation,occupation,institute_work,contribution');
-  for (String key in users.keys) {
+  for (String key in users.keys as Iterable<String>) {
     var user = users[key];
 
     if (user['email'] == null) continue;
 
-    var values = <String>[
+    var values = <String?>[
       user['name'],
       user['email'],
       user['mobileNumber'],
-      (user['isPresent'] as bool).toString(),
-      (user['isRegistered'] as bool).toString(),
+      (user['isPresent'] as bool?).toString(),
+      (user['isRegistered'] as bool?).toString(),
       user['registration'] == null ? '' : user['registration']['designation'],
       user['registration'] == null ? '' : user['registration']['occupation'],
       user['registration'] == null

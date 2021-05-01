@@ -5,7 +5,7 @@ typedef void BoolCallback(bool val);
 
 class SprungBox extends StatefulWidget {
   final Duration duration;
-  final BoolCallback callback;
+  final BoolCallback? callback;
 
   SprungBox({
     this.callback,
@@ -36,7 +36,7 @@ class _SprungBoxState extends State<SprungBox>
     );
     await Future.delayed(
       new Duration(milliseconds: 1500),
-      () => widget.callback(true),
+      () => widget.callback!(true),
     );
   }
 

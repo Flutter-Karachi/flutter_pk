@@ -8,7 +8,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class FullScreenFeedbackDialog extends StatefulWidget {
-  final Session session;
+  final Session? session;
   FullScreenFeedbackDialog({this.session});
   @override
   FullScreenFeedbackDialogState createState() {
@@ -23,7 +23,7 @@ class FullScreenFeedbackDialogState extends State<FullScreenFeedbackDialog> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      backgroundColor: ColorDictionary.stringToColor[widget.session.color],
+      backgroundColor: ColorDictionary.stringToColor[widget.session!.color!],
       body: Stack(
         children: <Widget>[
           SafeArea(
@@ -36,7 +36,7 @@ class FullScreenFeedbackDialogState extends State<FullScreenFeedbackDialog> {
                       icon: Icon(
                         Icons.clear,
                         color: ColorDictionary
-                            .stringToColor[widget.session.textColor],
+                            .stringToColor[widget.session!.textColor!],
                       ),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
@@ -50,7 +50,7 @@ class FullScreenFeedbackDialogState extends State<FullScreenFeedbackDialog> {
                         Icons.rate_review,
                         size: 100.0,
                         color: ColorDictionary
-                            .stringToColor[widget.session.textColor],
+                            .stringToColor[widget.session!.textColor!],
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
@@ -60,7 +60,7 @@ class FullScreenFeedbackDialogState extends State<FullScreenFeedbackDialog> {
                           style: TextStyle(
                             fontSize: 16.0,
                             color: ColorDictionary
-                                .stringToColor[widget.session.textColor],
+                                .stringToColor[widget.session!.textColor!],
                           ),
                         ),
                       ),
@@ -72,7 +72,7 @@ class FullScreenFeedbackDialogState extends State<FullScreenFeedbackDialog> {
                           style: TextStyle(
                             fontSize: 16.0,
                             color: ColorDictionary
-                                .stringToColor[widget.session.textColor],
+                                .stringToColor[widget.session!.textColor!],
                           ),
                         ),
                       ),
@@ -81,16 +81,16 @@ class FullScreenFeedbackDialogState extends State<FullScreenFeedbackDialog> {
                         child: Container(
                           decoration: BoxDecoration(
                               color: ColorDictionary
-                                  .stringToColor[widget.session.textColor],
+                                  .stringToColor[widget.session!.textColor!],
                               borderRadius: BorderRadius.circular(10.0)),
                           child: ListTile(
                             title: Center(
                               child: Text(
-                                widget.session.title,
+                                widget.session!.title!,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: ColorDictionary
-                                      .stringToColor[widget.session.color],
+                                      .stringToColor[widget.session!.color!],
                                 ),
                               ),
                             ),
@@ -108,9 +108,9 @@ class FullScreenFeedbackDialogState extends State<FullScreenFeedbackDialog> {
                         rating: rating,
                         size: 40.0,
                         color: ColorDictionary
-                            .stringToColor[widget.session.textColor],
+                            .stringToColor[widget.session!.textColor!],
                         borderColor: ColorDictionary
-                            .stringToColor[widget.session.textColor],
+                            .stringToColor[widget.session!.textColor!],
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 16.0),
@@ -124,14 +124,14 @@ class FullScreenFeedbackDialogState extends State<FullScreenFeedbackDialog> {
                                   'CONTINUE',
                                   style: TextStyle(
                                     color: ColorDictionary.stringToColor[
-                                        widget.session.textColor],
+                                        widget.session!.textColor!],
                                   ),
                                 ),
                                 Icon(
                                   Icons.arrow_forward,
                                   size: 24.0,
                                   color: ColorDictionary
-                                      .stringToColor[widget.session.textColor],
+                                      .stringToColor[widget.session!.textColor!],
                                 )
                               ],
                             ),
@@ -157,9 +157,9 @@ class FullScreenFeedbackDialogState extends State<FullScreenFeedbackDialog> {
     try {
       CollectionReference reference =
           FirebaseFirestore.instance.collection(FireStoreKeys.userCollection);
-      await reference.doc(userCache.user.id).setData(
+      await reference.doc(userCache.user!.id).set(
         {
-          'feedback': {widget.session.id: rating}
+          'feedback': {widget.session!.id: rating}
         },
         SetOptions(
           merge: true
@@ -173,10 +173,10 @@ class FullScreenFeedbackDialogState extends State<FullScreenFeedbackDialog> {
         buttons: [
           DialogButton(
             child: Text("Cool!",
-                style: Theme.of(context).textTheme.title.copyWith(
+                style: Theme.of(context).textTheme.title!.copyWith(
                       color: Colors.white,
                     )),
-            color: ColorDictionary.stringToColor[widget.session.color],
+            color: ColorDictionary.stringToColor[widget.session!.color!],
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.of(context).popUntil(
@@ -196,7 +196,7 @@ class FullScreenFeedbackDialogState extends State<FullScreenFeedbackDialog> {
         buttons: [
           DialogButton(
             child: Text("Dismiss",
-                style: Theme.of(context).textTheme.title.copyWith(
+                style: Theme.of(context).textTheme.title!.copyWith(
                       color: Colors.white,
                     )),
             color: Colors.red,

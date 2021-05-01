@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pk/caches/user.dart';
 import 'package:flutter_pk/venue_detail.dart';
 import 'package:flutter_pk/global.dart';
-import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter_pk/registration/registration.dart';
 import 'package:flutter_pk/widgets/full_screen_loader.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -25,8 +25,8 @@ class HomePageMasterState extends State<HomePageMaster> {
   String floatingButtonLabel = 'Register';
   IconData floatingButtonIcon = Icons.group_work;
   bool _isLoading = false;
-  bool _isUserPresent = false;
-  InAppUser _user = new InAppUser();
+  bool? _isUserPresent = false;
+  InAppUser? _user = new InAppUser();
   List<Widget> widgets = <Widget>[
     SchedulePage(),
     Center(
@@ -68,8 +68,8 @@ class HomePageMasterState extends State<HomePageMaster> {
             : BottomNavigationBar(
                 onTap: (value) {
                   floatingButtonLabel =
-                      _user.isRegistered ? 'Scan QR' : 'Register';
-                  floatingButtonIcon = _user.isRegistered
+                      _user!.isRegistered! ? 'Scan QR' : 'Register';
+                  floatingButtonIcon = _user!.isRegistered!
                       ? Icons.center_focus_weak
                       : Icons.group_work;
                   if (value == 2) {
@@ -102,9 +102,9 @@ class HomePageMasterState extends State<HomePageMaster> {
   void _floatingButtonTapModerator() {
     if (_selectedIndex == 2) {
       _navigateToGoogleMaps();
-    } else if (_user.isRegistered) {
-      if (!_isUserPresent) {
-        if (DateTime.now().isBefore(eventDateTimeCache.eventDateTime)) {
+    } else if (_user!.isRegistered!) {
+      if (!_isUserPresent!) {
+        if (DateTime.now().isBefore(eventDateTimeCache.eventDateTime!)) {
           Alert(
             context: context,
             type: AlertType.info,
@@ -113,7 +113,7 @@ class HomePageMasterState extends State<HomePageMaster> {
             buttons: [
               DialogButton(
                 child: Text("Cool!",
-                    style: Theme.of(context).textTheme.title.copyWith(
+                    style: Theme.of(context).textTheme.title!.copyWith(
                           color: Colors.white,
                         )),
                 color: Colors.green,
@@ -135,7 +135,7 @@ class HomePageMasterState extends State<HomePageMaster> {
           buttons: [
             DialogButton(
               child: Text("Cool!",
-                  style: Theme.of(context).textTheme.title.copyWith(
+                  style: Theme.of(context).textTheme.title!.copyWith(
                         color: Colors.white,
                       )),
               color: Colors.green,
@@ -181,7 +181,7 @@ class HomePageMasterState extends State<HomePageMaster> {
     }
   }
 
-  Future<String> _scanQr() async {
+  Future<String?> _scanQr() async {
     try {
       var qrDataString = await BarcodeScanner.scan();
       print(qrDataString.rawContent);
@@ -189,34 +189,34 @@ class HomePageMasterState extends State<HomePageMaster> {
         setState(() {
           _isLoading = true;
         });
-        DocumentReference attendanceReference = Firestore.instance
+        DocumentReference attendanceReference = FirebaseFirestore.instance
             .collection(FireStoreKeys.attendanceCollection)
-            .document(FireStoreKeys.dateReferenceString);
+            .doc(FireStoreKeys.dateReferenceString);
 
         CollectionReference attendeeCollectionReference =
             attendanceReference.collection(FireStoreKeys.attendeesCollection);
 
-        int attendanceCount;
-        await Firestore.instance
+        int? attendanceCount;
+        await FirebaseFirestore.instance
             .collection(FireStoreKeys.attendanceCollection)
-            .document(FireStoreKeys.dateReferenceString)
+            .doc(FireStoreKeys.dateReferenceString)
             .get()
             .then((onValue) {
-          attendanceCount = onValue.data()['attendanceCount'];
+          attendanceCount = onValue.data()!['attendanceCount'];
         });
 
         await attendanceReference.set(
-            {'attendanceCount': attendanceCount + 1}, SetOptions(merge: true));
+            {'attendanceCount': attendanceCount! + 1}, SetOptions(merge: true));
 
-        await attendeeCollectionReference.doc(userCache.user.id).set(
-          {'userName': userCache.user.name},
+        await attendeeCollectionReference.doc(userCache.user!.id).set(
+          {'userName': userCache.user!.name},
           SetOptions(merge: true),
         );
         CollectionReference reference =
-            Firestore.instance.collection(FireStoreKeys.userCollection);
+        FirebaseFirestore.instance.collection(FireStoreKeys.userCollection);
 
         await reference
-            .doc(userCache.user.id)
+            .doc(userCache.user!.id)
             .set({"isPresent": true}, SetOptions(merge: true));
         _setUser(true);
         Alert(
@@ -227,7 +227,7 @@ class HomePageMasterState extends State<HomePageMaster> {
           buttons: [
             DialogButton(
               child: Text("Cool!",
-                  style: Theme.of(context).textTheme.title.copyWith(
+                  style: Theme.of(context).textTheme.title!.copyWith(
                         color: Colors.white,
                       )),
               color: Colors.green,
@@ -249,7 +249,7 @@ class HomePageMasterState extends State<HomePageMaster> {
           buttons: [
             DialogButton(
               child: Text("Dismiss",
-                  style: Theme.of(context).textTheme.title.copyWith(
+                  style: Theme.of(context).textTheme.title!.copyWith(
                         color: Colors.white,
                       )),
               color: Colors.blueGrey,
@@ -270,7 +270,7 @@ class HomePageMasterState extends State<HomePageMaster> {
         buttons: [
           DialogButton(
             child: Text("Dismiss",
-                style: Theme.of(context).textTheme.title.copyWith(
+                style: Theme.of(context).textTheme.title!.copyWith(
                       color: Colors.white,
                     )),
             color: Colors.red,
@@ -294,7 +294,7 @@ class HomePageMasterState extends State<HomePageMaster> {
         fullscreenDialog: true,
       ),
     );
-    var user = await userCache.getUser(userCache.user.id, useCached: false);
+    var user = await userCache.getUser(userCache.user!.id, useCached: false);
     setState(() {
       _user = user;
     });
@@ -303,15 +303,15 @@ class HomePageMasterState extends State<HomePageMaster> {
 
   Future _setUser(bool useCached) async {
     var user = await userCache.getUser(
-      userCache.user.id,
+      userCache.user!.id,
       useCached: useCached,
     );
     setState(() {
       _user = user;
-      _isUserPresent = user.isPresent;
-      floatingButtonLabel = _user.isRegistered ? 'Scan QR' : 'Register';
+      _isUserPresent = user!.isPresent;
+      floatingButtonLabel = _user!.isRegistered! ? 'Scan QR' : 'Register';
       floatingButtonIcon =
-          _user.isRegistered ? Icons.center_focus_weak : Icons.group_work;
+          _user!.isRegistered! ? Icons.center_focus_weak : Icons.group_work;
     });
   }
 }

@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserCache {
-  InAppUser _user;
+  InAppUser? _user;
 
-  InAppUser get user => _user;
+  InAppUser? get user => _user;
 
-  Future<InAppUser> getUser(String id, {bool useCached = true}) async {
+  Future<InAppUser?> getUser(String? id, {bool useCached = true}) async {
     if (_user != null && useCached) {
       return _user;
     }
     _user = InAppUser.fromSnapshot(
-        await FirebaseFirestore.instance.collection('users').document(id).get());
+        await FirebaseFirestore.instance.collection('users').doc(id).get());
     return _user;
   }
 
@@ -18,17 +18,17 @@ class UserCache {
 }
 
 class InAppUser {
-  final String id;
-  final String name;
-  final String email;
-  final String photoUrl;
-  final String mobileNumber;
-  final bool isRegistered;
-  final bool isContributor;
-  final bool isPresent;
-  final DocumentReference reference;
+  final String? id;
+  final String? name;
+  final String? email;
+  final String? photoUrl;
+  final String? mobileNumber;
+  final bool? isRegistered;
+  final bool? isContributor;
+  final bool? isPresent;
+  final DocumentReference? reference;
 
-  Contribution contribution;
+  Contribution? contribution;
 
   InAppUser({
     this.name,
@@ -51,7 +51,7 @@ class InAppUser {
         isContributor = map['isContributor'],
         isPresent = map['isPresent'],
         mobileNumber = map['mobileNumber'] {
-    if (isContributor) contribution = Contribution.fromMap(map['contribution']);
+    if (isContributor!) contribution = Contribution.fromMap(map['contribution']);
   }
 
   Map<String, dynamic> toJson() => {
@@ -66,14 +66,14 @@ class InAppUser {
       };
 
   InAppUser.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data(), reference: snapshot.reference);
+      : this.fromMap(snapshot.data()!, reference: snapshot.reference);
 }
 
 class Contribution {
-  final bool isVolunteer;
-  final bool isLogisticsAdministrator;
-  final bool isSpeaker;
-  final bool isSocialMediaMarketingPerson;
+  final bool? isVolunteer;
+  final bool? isLogisticsAdministrator;
+  final bool? isSpeaker;
+  final bool? isSocialMediaMarketingPerson;
 
   Contribution({
     this.isSocialMediaMarketingPerson,
