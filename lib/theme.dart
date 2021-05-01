@@ -22,7 +22,7 @@ final theme = _buildTheme();
 
 ThemeData _buildTheme() {
   var base = ThemeData.light();
-  print('font size of theme: ${base.primaryTextTheme.title.fontSize}');
+  print('font size of theme: ${base.primaryTextTheme.title!.fontSize}');
 
   return base.copyWith(
     primaryColor: kBlue,

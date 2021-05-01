@@ -1,7 +1,7 @@
 class EventDateTimeCache {
-  DateTime _eventDateTime;
+  DateTime? _eventDateTime;
 
-  DateTime get eventDateTime => _eventDateTime;
+  DateTime? get eventDateTime => _eventDateTime;
 
   void setDateTime(DateTime eventDateTime) {
     _eventDateTime = eventDateTime;

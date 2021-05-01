@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_pk/helpers/formatters.dart';
 
 class EventDetails {
-  final String date;
-  final String eventTitle;
-  final Venue venue;
-  final DocumentReference reference;
+  final String? date;
+  final String? eventTitle;
+  final Venue? venue;
+  final DocumentReference? reference;
 
   EventDetails({this.date, this.eventTitle, this.venue, this.reference});
 
@@ -17,16 +17,16 @@ class EventDetails {
         ),
         venue = Venue.fromMap(map['venue']);
   EventDetails.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data(), reference: snapshot.reference);
+      : this.fromMap(snapshot.data()!, reference: snapshot.reference);
 }
 
 class Venue {
-  final String title;
-  final String address;
-  final String city;
-  final String imageUrl;
-  final Location location;
-  final DocumentReference reference;
+  final String? title;
+  final String? address;
+  final String? city;
+  final String? imageUrl;
+  final Location? location;
+  final DocumentReference? reference;
 
   Venue({
     this.address,
@@ -45,13 +45,13 @@ class Venue {
         location = Location.fromMap(map['location']);
 
   Venue.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data(), reference: snapshot.reference);
+      : this.fromMap(snapshot.data()!, reference: snapshot.reference);
 }
 
 class Location {
-  final double latitude;
-  final double longitude;
-  final DocumentReference reference;
+  final double? latitude;
+  final double? longitude;
+  final DocumentReference? reference;
 
   Location({
     this.latitude,
@@ -64,5 +64,5 @@ class Location {
         longitude = map['longitude'];
 
   Location.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data(), reference: snapshot.reference);
+      : this.fromMap(snapshot.data()!, reference: snapshot.reference);
 }

@@ -12,10 +12,10 @@ class FullScreenContributionDialog extends StatefulWidget {
 
 class FullScreenContributionDialogState
     extends State<FullScreenContributionDialog> {
-  bool _isVolunteer = false;
-  bool _isLogisticsAdministrator = false;
-  bool _isSpeaker = false;
-  bool _isSocialMediaMarketingPerson = false;
+  bool? _isVolunteer = false;
+  bool? _isLogisticsAdministrator = false;
+  bool? _isSpeaker = false;
+  bool? _isSocialMediaMarketingPerson = false;
   bool _isError = false;
 
   @override
@@ -59,7 +59,7 @@ class FullScreenContributionDialogState
               child: FlatButton(
                 child: Text(
                   'SKIP',
-                  style: Theme.of(context).textTheme.subhead.copyWith(
+                  style: Theme.of(context).textTheme.subhead!.copyWith(
                         color: Colors.grey,
                       ),
                 ),
@@ -104,7 +104,7 @@ class FullScreenContributionDialogState
           CheckboxListTile(
             title: Text('Volunteer'),
             value: _isVolunteer,
-            onChanged: (bool value) {
+            onChanged: (bool? value) {
               setState(() => _isError = false);
               setState(() => _isVolunteer = value);
             },
@@ -112,7 +112,7 @@ class FullScreenContributionDialogState
           CheckboxListTile(
             title: Text('Administration & Logistics'),
             value: _isLogisticsAdministrator,
-            onChanged: (bool value) {
+            onChanged: (bool? value) {
               setState(() => _isError = false);
               setState(() => _isLogisticsAdministrator = value);
             },
@@ -120,7 +120,7 @@ class FullScreenContributionDialogState
           CheckboxListTile(
             title: Text('Speaker'),
             value: _isSpeaker,
-            onChanged: (bool value) {
+            onChanged: (bool? value) {
               setState(() => _isError = false);
               setState(() => _isSpeaker = value);
             },
@@ -128,7 +128,7 @@ class FullScreenContributionDialogState
           CheckboxListTile(
             title: Text('Social media marketing'),
             value: _isSocialMediaMarketingPerson,
-            onChanged: (bool value) {
+            onChanged: (bool? value) {
               setState(() => _isError = false);
               setState(() => _isSocialMediaMarketingPerson = value);
             },
@@ -172,7 +172,7 @@ class FullScreenContributionDialogState
     if (!_validate()) return;
     try {
       FirebaseFirestore.instance.runTransaction((transaction) async {
-        await transaction.update(userCache.user.reference, {
+        await transaction.update(userCache.user!.reference!, {
           'isContributor': true,
           'contribution': {
             'volunteer': _isVolunteer,
@@ -182,7 +182,7 @@ class FullScreenContributionDialogState
           }
         });
       });
-      await userCache.getUser(userCache.user.id, useCached: false);
+      await userCache.getUser(userCache.user!.id, useCached: false);
       Navigator.of(context).pop();
     } catch (ex) {
       print(ex);
@@ -194,7 +194,7 @@ class FullScreenContributionDialogState
         buttons: [
           DialogButton(
             child: Text("Dismiss",
-                style: Theme.of(context).textTheme.title.copyWith(
+                style: Theme.of(context).textTheme.title!.copyWith(
                       color: Colors.white,
                     )),
             color: Colors.red,
@@ -289,10 +289,10 @@ class FullScreenContributionDialogState
   }
 
   bool _validate() {
-    if (!_isSocialMediaMarketingPerson &&
-        !_isSpeaker &&
-        !_isLogisticsAdministrator &&
-        !_isVolunteer) {
+    if (!_isSocialMediaMarketingPerson! &&
+        !_isSpeaker! &&
+        !_isLogisticsAdministrator! &&
+        !_isVolunteer!) {
       setState(() => _isError = true);
       return false;
     }

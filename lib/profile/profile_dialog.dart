@@ -15,8 +15,8 @@ class FullScreenProfileDialog extends StatefulWidget {
 }
 
 class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
-  InAppUser _user = new InAppUser();
-  SharedPreferencesHandler preferences;
+  InAppUser? _user = new InAppUser();
+  late SharedPreferencesHandler preferences;
 
   @override
   void initState() {
@@ -56,7 +56,7 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
             GestureDetector(
               child: Text(
                 'SIGN OUT',
-                style: Theme.of(context).textTheme.subhead.copyWith(
+                style: Theme.of(context).textTheme.subhead!.copyWith(
                       color: Theme.of(context).accentColor,
                     ),
               ),
@@ -80,7 +80,7 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
                     buttons: [
                       DialogButton(
                         child: Text("Dismiss",
-                            style: Theme.of(context).textTheme.title.copyWith(
+                            style: Theme.of(context).textTheme.title!.copyWith(
                                   color: Colors.white,
                                 )),
                         color: Colors.red,
@@ -115,25 +115,25 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
                   shape: BoxShape.circle,
                   image: new DecorationImage(
                     fit: BoxFit.fill,
-                    image: NetworkImage(_user.photoUrl),
+                    image: NetworkImage(_user!.photoUrl!),
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  _user.name,
+                  _user!.name!,
                   style: Theme.of(context)
                       .textTheme
-                      .title
+                      .title!
                       .copyWith(color: Colors.grey),
                 ),
               ),
               Text(
-                _user.email,
+                _user!.email!,
                 style: Theme.of(context)
                     .textTheme
-                    .subhead
+                    .subhead!
                     .copyWith(color: Colors.black38),
               ),
             ],
@@ -151,7 +151,7 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
               children: <Widget>[],
             ),
           ),
-          !_user.isContributor
+          !_user!.isContributor!
               ? ListTile(
                   title: Center(child: Text('Want to contribute?')),
                   onTap: () async {
@@ -162,7 +162,7 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
                       ),
                     );
                     var user = await userCache.getUser(
-                      userCache.user.id,
+                      userCache.user!.id,
                       useCached: false,
                     );
                     Timer(Duration(seconds: 2), () {
@@ -193,7 +193,7 @@ class FullScreenProfileDialogState extends State<FullScreenProfileDialog> {
   }
 
   Future _setUser() async {
-    var user = await userCache.getUser(userCache.user.id);
+    var user = await userCache.getUser(userCache.user!.id);
     setState(() {
       _user = user;
     });

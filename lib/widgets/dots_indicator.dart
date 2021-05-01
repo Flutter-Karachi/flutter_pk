@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class DotsIndicator extends AnimatedWidget {
   DotsIndicator({
-    this.controller,
+    required this.controller,
     this.itemCount,
     this.onPageSelected,
     this.activeColor,
@@ -15,17 +15,17 @@ class DotsIndicator extends AnimatedWidget {
   final PageController controller;
 
   /// The number of items managed by the PageController
-  final int itemCount;
+  final int? itemCount;
 
   /// Called when a dot is tapped
-  final ValueChanged<int> onPageSelected;
+  final ValueChanged<int>? onPageSelected;
 
   /// The color of the dots.
   ///
   /// Defaults to `Colors.white`.
   final Color inactiveColor;
 
-  final Color activeColor;
+  final Color? activeColor;
 
   // The base size of the dots
   static const double _kDotSize = 8.0;

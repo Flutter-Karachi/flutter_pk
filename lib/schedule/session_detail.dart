@@ -11,25 +11,25 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 
 class SessionDetailPage extends StatelessWidget {
   final Session session;
-  SessionDetailPage({@required this.session});
+  SessionDetailPage({required this.session});
 
   @override
   Widget build(BuildContext context) {
-    var textColor = ColorDictionary.stringToColor[session.textColor];
+    var textColor = ColorDictionary.stringToColor[session.textColor!];
 
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.dark,
         iconTheme: IconThemeData(color: textColor),
         title: Text(
-          session.title,
+          session.title!,
           style: TextStyle(color: textColor),
         ),
-        backgroundColor: ColorDictionary.stringToColor[session.color],
+        backgroundColor: ColorDictionary.stringToColor[session.color!],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: _buildFeedbackButton(context),
-      body: _buildBody(showSpeakerInfo: session.speakers != null && session.speakers.length > 0),
+      body: _buildBody(showSpeakerInfo: session.speakers != null && session.speakers!.length > 0),
     );
   }
 
@@ -37,7 +37,7 @@ class SessionDetailPage extends StatelessWidget {
     return FloatingActionButton.extended(
       onPressed: () {
         if (DateTime.now().isAfter(
-          eventDateTimeCache.eventDateTime.add(
+          eventDateTimeCache.eventDateTime!.add(
             Duration(days: 1),
           ),
         )) {
@@ -52,7 +52,7 @@ class SessionDetailPage extends StatelessWidget {
             buttons: [
               DialogButton(
                 child: Text("Cool!",
-                    style: Theme.of(context).textTheme.title.copyWith(
+                    style: Theme.of(context).textTheme.title!.copyWith(
                           color: Colors.white,
                         )),
                 color: Colors.green,
@@ -66,18 +66,18 @@ class SessionDetailPage extends StatelessWidget {
       },
       icon: Icon(
         Icons.rate_review,
-        color: ColorDictionary.stringToColor[session.textColor],
+        color: ColorDictionary.stringToColor[session.textColor!],
       ),
       label: Text(
         'Feedback',
         style: TextStyle(
-            color: ColorDictionary.stringToColor[session.textColor]),
+            color: ColorDictionary.stringToColor[session.textColor!]),
       ),
-      backgroundColor: ColorDictionary.stringToColor[session.color],
+      backgroundColor: ColorDictionary.stringToColor[session.color!],
     );
   }
 
-  Widget _buildBody({@required bool showSpeakerInfo}) {
+  Widget _buildBody({required bool showSpeakerInfo}) {
     var bodyWidgets = <Widget>[];
 
     if (showSpeakerInfo) {
@@ -87,10 +87,10 @@ class SessionDetailPage extends StatelessWidget {
             padding: const EdgeInsets.only(top: 8.0),
             child: Center(
               child: Text(
-                  'About ${session.speakers.length > 1 ? 'speakers' : 'speaker'}'),
+                  'About ${session.speakers!.length > 1 ? 'speakers' : 'speaker'}'),
             ),
           ),
-          session.speakers.length > 1
+          session.speakers!.length > 1
               ? _buildMultiSpeakerDetail()
               : _buildSingleSpeakerDetail(),
           Divider(),
@@ -104,17 +104,17 @@ class SessionDetailPage extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Container(
             decoration: BoxDecoration(
-                color: ColorDictionary.stringToColor[session.color],
+                color: ColorDictionary.stringToColor[session.color!],
                 borderRadius: BorderRadius.circular(10.0)),
             child: ListTile(
               title: Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Center(
                   child: Text(
-                    session.title,
+                    session.title!,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: ColorDictionary.stringToColor[session.textColor],
+                      color: ColorDictionary.stringToColor[session.textColor!],
                     ),
                   ),
                 ),
@@ -122,9 +122,9 @@ class SessionDetailPage extends StatelessWidget {
               subtitle: Padding(
                 padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
                 child: Text(
-                  session.description,
+                  session.description!,
                   style: TextStyle(
-                      color: ColorDictionary.stringToColor[session.textColor]),
+                      color: ColorDictionary.stringToColor[session.textColor!]),
                 ),
               ),
             ),
@@ -168,8 +168,8 @@ class SessionDetailPage extends StatelessWidget {
         future: _getMultiSpeakerData(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            var speakerOne = snapshot.data.first;
-            var speakerTwo = snapshot.data[1];
+            var speakerOne = snapshot.data!.first;
+            var speakerTwo = snapshot.data![1];
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -183,7 +183,7 @@ class SessionDetailPage extends StatelessWidget {
                 'Fetching speaker details',
                 style: Theme.of(context)
                     .textTheme
-                    .title
+                    .title!
                     .copyWith(color: Colors.grey),
               ),
             );
@@ -196,14 +196,14 @@ class SessionDetailPage extends StatelessWidget {
         future: _getData(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return _buildSpeakerView(snapshot.data);
+            return _buildSpeakerView(snapshot.data!);
           } else {
             return Center(
               child: Text(
                 'Fetching speaker details',
                 style: Theme.of(context)
                     .textTheme
-                    .title
+                    .title!
                     .copyWith(color: Colors.grey),
               ),
             );
@@ -238,7 +238,7 @@ class SessionDetailPage extends StatelessWidget {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                       image: CachedNetworkImageProvider(
-                        speaker.photoUrl,
+                        speaker.photoUrl!,
                       ),
                     ),
                   ),
@@ -253,7 +253,7 @@ class SessionDetailPage extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Text(
-                  speaker.name,
+                  speaker.name!,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -261,7 +261,7 @@ class SessionDetailPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 16.0),
                   child: Text(
-                    speaker.description,
+                    speaker.description!,
                   ),
                 ),
               ],
@@ -276,7 +276,7 @@ class SessionDetailPage extends StatelessWidget {
     CollectionReference reference =
         await FirebaseFirestore.instance.collection(FireStoreKeys.speakerCollection);
     var speaker =
-        Speaker.fromSnapshot(await reference.document(session.speakerId).get());
+        Speaker.fromSnapshot(await reference.doc(session.speakerId).get());
     return speaker;
   }
 
@@ -284,10 +284,10 @@ class SessionDetailPage extends StatelessWidget {
     CollectionReference reference =
         await FirebaseFirestore.instance.collection(FireStoreKeys.speakerCollection);
     var speakerOne = Speaker.fromSnapshot(
-        await reference.document(session.speakers[0]).get());
+        await reference.doc(session.speakers![0]).get());
     var speakerTwo = Speaker.fromSnapshot(
-        await reference.document(session.speakers[1]).get());
-    List<Speaker> list = List<Speaker>();
+        await reference.doc(session.speakers![1]).get());
+    List<Speaker> list = <Speaker>[];
     list.addAll(<Speaker>[
       speakerOne,
       speakerTwo,

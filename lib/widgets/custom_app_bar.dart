@@ -7,7 +7,7 @@ import 'package:flutter_pk/util.dart';
 
 class CustomAppBar extends StatefulWidget {
   final String title;
-  CustomAppBar({@required this.title});
+  CustomAppBar({required this.title});
   @override
   CustomAppBarState createState() {
     return new CustomAppBarState();
@@ -16,7 +16,7 @@ class CustomAppBar extends StatefulWidget {
 
 class CustomAppBarState extends State<CustomAppBar> {
   String eventDate = '';
-  String eventTitle = '';
+  String? eventTitle = '';
   @override
   void initState() {
     super.initState();
@@ -56,7 +56,7 @@ class CustomAppBarState extends State<CustomAppBar> {
             child: Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: CircleAvatar(
-                  backgroundImage: NetworkImage(userCache.user.photoUrl)),
+                  backgroundImage: NetworkImage(userCache.user!.photoUrl!)),
             ),
           ),
           Expanded(
@@ -65,7 +65,7 @@ class CustomAppBarState extends State<CustomAppBar> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  eventTitle,
+                  eventTitle!,
                   style: Theme.of(context).textTheme.title,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.clip,

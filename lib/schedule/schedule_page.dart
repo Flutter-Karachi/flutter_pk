@@ -42,7 +42,7 @@ class SchedulePageState extends State<SchedulePage>
 
   Widget _buildList() {
     return Expanded(
-      child: FutureBuilder<List<Session>>(
+      child: FutureBuilder<List<Session>?>(
         future: _fetchSessions(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
@@ -56,7 +56,7 @@ class SchedulePageState extends State<SchedulePage>
               ),
             );
           } else {
-            var sessions = snapshot.data;
+            var sessions = snapshot.data!;
             return ListView.builder(
               itemCount: sessions.length,
               itemBuilder: (BuildContext context, int index) {
@@ -78,7 +78,7 @@ class SchedulePageState extends State<SchedulePage>
       return Center(
         child: Text(
           'Nothing found!',
-          style: Theme.of(context).textTheme.title.copyWith(
+          style: Theme.of(context).textTheme.title!.copyWith(
                 color: Colors.black26,
                 fontWeight: FontWeight.bold,
               ),
@@ -111,7 +111,7 @@ class SchedulePageState extends State<SchedulePage>
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: ColorDictionary.stringToColor[session?.color],
+                  color: ColorDictionary.stringToColor[session.color!],
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(10.0),
                     bottomLeft: Radius.circular(10.0),
@@ -119,22 +119,22 @@ class SchedulePageState extends State<SchedulePage>
                 ),
                 child: ListTile(
                     title: Text(
-                      session.title,
+                      session.title!,
                       style: TextStyle(
                           color: ColorDictionary
-                              .stringToColor[session?.textColor]),
+                              .stringToColor[session.textColor!]),
                     ),
                     subtitle: Text(
                       '${formatDate(
-                        session?.startDateTime,
+                        session.startDateTime!,
                         DateFormats.shortUiDateTimeFormat,
                       )} - ${formatDate(
-                        session?.endDateTime,
+                        session.endDateTime!,
                         DateFormats.shortUiTimeFormat,
                       )}',
                       style: TextStyle(
                         color:
-                            ColorDictionary.stringToColor[session?.textColor],
+                            ColorDictionary.stringToColor[session.textColor!],
                       ),
                     ),
                     onTap: () => _handleListTileOnTap(context, session)),
@@ -154,7 +154,7 @@ class SchedulePageState extends State<SchedulePage>
 
   Future _handleListTileOnTap(BuildContext context, Session session) async {
     var isDescriptionAvailable =
-        session.description != null && session.description.isNotEmpty;
+        session.description != null && session.description!.isNotEmpty;
     if (isDescriptionAvailable)
       await Navigator.of(context).push(
         MaterialPageRoute(
@@ -165,7 +165,7 @@ class SchedulePageState extends State<SchedulePage>
       );
   }
 
-  Future<List<Session>> _fetchSessions() async {
+  Future<List<Session>?> _fetchSessions() async {
     try {
       var response = await api.getSessionList();
       return response;

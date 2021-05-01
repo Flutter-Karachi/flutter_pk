@@ -11,8 +11,8 @@ import '../widgets/full_screen_loader.dart';
 import '../widgets/sprung_box.dart';
 
 class OnboardingPage extends StatefulWidget {
-  OnboardingPage({Key key, this.title}) : super(key: key);
-  final String title;
+  OnboardingPage({Key? key, this.title}) : super(key: key);
+  final String? title;
 
   @override
   _OnboardingPageState createState() => _OnboardingPageState();
@@ -22,7 +22,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   bool _isLoading = false;
   bool _showSwipeText = false;
   bool _isFetchingSharedPreferences = false;
-  SharedPreferencesHandler preferences;
+  late SharedPreferencesHandler preferences;
 
   LoginApi api = LoginApi();
 
@@ -166,7 +166,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
           SharedPreferencesKeys.firebaseUserId, userId);
       await userCache.getUser(userId);
 
-      if (!userCache.user.isContributor) {
+      if (!userCache.user!.isContributor!) {
         await Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => FullScreenContributionDialog(),
@@ -189,7 +189,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         buttons: [
           DialogButton(
             child: Text("Dismiss",
-                style: Theme.of(context).textTheme.title.copyWith(
+                style: Theme.of(context).textTheme.title!.copyWith(
                       color: Colors.white,
                     )),
             color: Colors.red,
@@ -226,7 +226,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         buttons: [
           DialogButton(
             child: Text("Dismiss",
-                style: Theme.of(context).textTheme.title.copyWith(
+                style: Theme.of(context).textTheme.title!.copyWith(
                       color: Colors.white,
                     )),
             color: Colors.red,
